@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace GymApp.DAL.Entities
 {
-    internal class Visitor
+    public class Visitor:People
     {
+        public int AttendedYears { get; set; }
+
+       //navigation property
+       public int OrderId { get; set; }
+       public List<Order> Orders { get; set; }
+
+       public List<Couch> Couches { get; set; }
+
     }
 }
