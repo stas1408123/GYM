@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymApp.DAL.Entities
+namespace GymApi.Models
 {
-     public class Order
+    public class Order
     {
         public int Id { get; set; }
         public string Product { get; set; }
@@ -17,6 +17,6 @@ namespace GymApp.DAL.Entities
 
         public People People { get; set; }
 
-       
+
     }
 }

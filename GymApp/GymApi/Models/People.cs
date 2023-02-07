@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymApp.DAL.Entities
+namespace GymApi.Models
 {
     public abstract class People
     {
@@ -12,7 +12,7 @@ namespace GymApp.DAL.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        
+
 
     }
 }
