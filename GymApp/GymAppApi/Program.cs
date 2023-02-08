@@ -1,12 +1,17 @@
-using GYM.API.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions;
+using GYM.API.Data;
+using System.Configuration;
+//using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<GymDbContext>(opt => opt.UseSqlServer("name=ConnectionStrings:GymDbDefault"));
+builder.Services.AddDbContext<GymDbContext>(opt=>opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<GymDbContext>(opt => opt.UseSqlServer(conn));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
