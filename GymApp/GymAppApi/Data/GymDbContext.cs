@@ -1,12 +1,12 @@
-﻿using GymAppApi.Models;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using GYM.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GYM.API.Data
 {
-    public class GymDbContext:DbContext
+    public class GymDbContext : DbContext
     {
-        public GymDbContext(DbContextOptions<GymDbContext> options):base(options)
+       
+        public GymDbContext(DbContextOptions<GymDbContext> options) : base(options)
         {
         }
 

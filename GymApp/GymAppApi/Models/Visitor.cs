@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GymAppApi.Models
+namespace GYM.API.Models
 {
     public class Visitor
     {
@@ -15,7 +15,6 @@ namespace GymAppApi.Models
 
         //Navigation properties
         public List<Couch> Couches { get; set; } = null!;
-
         public List<Order> Orders { get; set; } = null!;
     }
 }

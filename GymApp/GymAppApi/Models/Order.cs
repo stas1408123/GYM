@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GymAppApi.Models
+namespace GYM.API.Models
 {
     public class Order
     {
@@ -19,6 +19,5 @@ namespace GymAppApi.Models
         //Navigation property
         public int VisitorId { get; set; }
         public Visitor Visitor { get; set; } = null!;
-
     }
 }
