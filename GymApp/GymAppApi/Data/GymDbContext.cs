@@ -5,13 +5,9 @@ namespace GYM.API.Data
 {
     public class GymDbContext : DbContext
     {
+       
         public GymDbContext(DbContextOptions<GymDbContext> options) : base(options)
         {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Test");
         }
 
         public DbSet<Couch> Couches { get; set; } = null!;
