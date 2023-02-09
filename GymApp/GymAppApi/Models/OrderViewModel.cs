@@ -2,7 +2,7 @@
 
 namespace GYM.API.Models
 {
-    public class Order
+    public class OrderViewModel
     {
         [Key]
         public int Id { get; set; }
@@ -18,6 +18,6 @@ namespace GYM.API.Models
 
         //Navigation property
         public int VisitorId { get; set; }
-        public Visitor Visitor { get; set; } = null!;
+        public VisitorViewModel Visitor { get; set; } = null!;
     }
 }

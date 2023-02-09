@@ -2,7 +2,7 @@
 
 namespace GYM.API.Models
 {
-    public class Couch
+    public class CouchViewModel
     {
         public int Id { get; set; }
         [Required]
@@ -17,6 +17,6 @@ namespace GYM.API.Models
 
         //Navigation property
         public int VisitorId { get; set; }
-        public List<Visitor> Visitors { get; set; } = null!;
+        public List<VisitorViewModel> Visitors { get; set; } = null!;
     }
 }
