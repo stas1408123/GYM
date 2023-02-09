@@ -18,14 +18,14 @@ namespace GYM.API.Controllers
 
         // GET: api/Visitors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Visitor>>> GetVisitors()
+        public async Task<ActionResult<IEnumerable<VisitorViewModel>>> GetVisitors()
         {
             return await _context.Visitors.ToListAsync();
         }
 
         // GET: api/Visitors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Visitor>> GetVisitor(int id)
+        public async Task<ActionResult<VisitorViewModel>> GetVisitor(int id)
         {
             var visitor = await _context.Visitors.FindAsync(id);
 
@@ -39,7 +39,7 @@ namespace GYM.API.Controllers
 
         // PUT: api/Visitors/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVisitor(int id, Visitor visitor)
+        public async Task<IActionResult> PutVisitor(int id, VisitorViewModel visitor)
         {
             if (id != visitor.Id)
             {
@@ -69,7 +69,7 @@ namespace GYM.API.Controllers
 
         // POST: api/Visitors
         [HttpPost]
-        public async Task<ActionResult<Visitor>> PostVisitor(Visitor visitor)
+        public async Task<ActionResult<VisitorViewModel>> PostVisitor(VisitorViewModel visitor)
         {
             _context.Visitors.Add(visitor);
             await _context.SaveChangesAsync();

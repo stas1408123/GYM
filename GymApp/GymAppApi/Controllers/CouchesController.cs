@@ -18,14 +18,14 @@ namespace GYM.API.Controllers
 
         // GET: api/Couches
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Couch>>> GetCouches()
+        public async Task<ActionResult<IEnumerable<CouchViewModel>>> GetCouches()
         {
             return await _context.Couches.ToListAsync();
         }
 
         // GET: api/Couches/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Couch>> GetCouch(int id)
+        public async Task<ActionResult<CouchViewModel>> GetCouch(int id)
         {
             var couch = await _context.Couches.FindAsync(id);
 
@@ -39,7 +39,7 @@ namespace GYM.API.Controllers
 
         // PUT: api/Couches/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCouch(int id, Couch couch)
+        public async Task<IActionResult> PutCouch(int id, CouchViewModel couch)
         {
             if (id != couch.Id)
             {
@@ -69,7 +69,7 @@ namespace GYM.API.Controllers
 
         // POST: api/Couches
         [HttpPost]
-        public async Task<ActionResult<Couch>> PostCouch(Couch couch)
+        public async Task<ActionResult<CouchViewModel>> PostCouch(CouchViewModel couch)
         {
             _context.Couches.Add(couch);
             await _context.SaveChangesAsync();

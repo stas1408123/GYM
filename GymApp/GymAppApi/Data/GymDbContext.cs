@@ -10,8 +10,8 @@ namespace GYM.API.Data
         {
         }
 
-        public DbSet<Couch> Couches { get; set; } = null!;
-        public DbSet<Order> Orders { get; set; } = null!;
-        public DbSet<Visitor> Visitors { get; set; } = null!;
+        public DbSet<CouchViewModel> Couches { get; set; } = null!;
+        public DbSet<OrderViewModel> Orders { get; set; } = null!;
+        public DbSet<VisitorViewModel> Visitors { get; set; } = null!;
     }
 }

@@ -18,14 +18,14 @@ namespace GYM.API.Controllers
 
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<ActionResult<IEnumerable<OrderViewModel>>> GetOrders()
         {
             return await _context.Orders.ToListAsync();
         }
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        public async Task<ActionResult<OrderViewModel>> GetOrder(int id)
         {
             var order = await _context.Orders.FindAsync(id);
 
@@ -39,7 +39,7 @@ namespace GYM.API.Controllers
 
         // PUT: api/Orders/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, Order order)
+        public async Task<IActionResult> PutOrder(int id, OrderViewModel order)
         {
             if (id != order.Id)
             {
@@ -69,7 +69,7 @@ namespace GYM.API.Controllers
 
         // POST: api/Orders
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<OrderViewModel>> PostOrder(OrderViewModel order)
         {
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
