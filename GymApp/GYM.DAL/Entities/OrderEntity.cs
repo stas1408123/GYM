@@ -1,6 +1,6 @@
 ﻿namespace GYM.DAL.Entities
 {
-    public class Order
+    public class OrderEntity
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
@@ -9,6 +9,6 @@
         public DateTime Date { get; set; }
 
         public int VisitorId { get; set; }
-        public Visitor Visitor { get; set; } = null!;
+        public VisitorEntity Visitor { get; set; } = null!;
     }
 }
