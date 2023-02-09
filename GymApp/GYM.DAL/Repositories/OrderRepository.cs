@@ -1,43 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GYM.DAL.EF;
 using GYM.DAL.Entities;
 using GYM.DAL.Repositories.Abstractions;
 
 namespace GYM.DAL.Repositories
 {
-    public class OrderRepository:IRepository<OrderEntity>
+    public class OrderRepository : IRepository<OrderEntity>
     {
-        public IEnumerable<OrderEntity> GetAll()
+        private readonly GymAppDbContext _context;
+
+        public OrderRepository(GymAppDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public void Create(OrderEntity item)
+        {
+            _context.OrderEntities.Add(item);
+            _context.SaveChanges();
         }
 
-        public OrderEntity Get(int id)
+        public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            var item = _context.OrderEntities.Find(id);
+            if (item != null)
+            {
+                _context.OrderEntities.Remove(item);
+                return true;
+            }
+            return false;
         }
 
         public IEnumerable<OrderEntity> Find(Func<OrderEntity, bool> predicate)
         {
-            throw new NotImplementedException();
+            return _context.OrderEntities.Where(predicate);
         }
 
-        public void Create(OrderEntity item)
+        public OrderEntity? Get(int id)
         {
-            throw new NotImplementedException();
+            return _context.OrderEntities.Find(id);
+        }
+
+        public IEnumerable<OrderEntity> GetAll()
+        {
+            return _context.OrderEntities.ToList();
         }
 
         public void Update(OrderEntity item)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
+            _context.OrderEntities.Update(item);
+            _context.SaveChanges();
         }
     }
 }

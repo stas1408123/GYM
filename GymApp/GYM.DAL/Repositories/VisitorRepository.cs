@@ -1,43 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GYM.DAL.EF;
 using GYM.DAL.Entities;
 using GYM.DAL.Repositories.Abstractions;
 
 namespace GYM.DAL.Repositories
 {
-    public class VisitorRepository:IRepository<VisitorEntity>
+    public class VisitorRepository : IRepository<VisitorEntity>
     {
-        public IEnumerable<VisitorEntity> GetAll()
+        private readonly GymAppDbContext _context;
+        public VisitorRepository(GymAppDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public void Create(VisitorEntity item)
+        {
+            _context.VisitorEntities.Add(item);
+            _context.SaveChanges();
         }
 
-        public VisitorEntity Get(int id)
+        public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            var item = _context.VisitorEntities.Find(id);
+            if (item != null)
+            {
+                _context.VisitorEntities.Remove(item);
+                return true;
+            }
+            return false;
         }
 
         public IEnumerable<VisitorEntity> Find(Func<VisitorEntity, bool> predicate)
         {
-            throw new NotImplementedException();
+            return _context.VisitorEntities.Where(predicate); ;
         }
 
-        public void Create(VisitorEntity item)
+        public VisitorEntity? Get(int id)
         {
-            throw new NotImplementedException();
+            return _context.VisitorEntities.Find(id);
+        }
+
+        public IEnumerable<VisitorEntity> GetAll()
+        {
+            return _context.VisitorEntities.ToList();
         }
 
         public void Update(VisitorEntity item)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
+            _context.VisitorEntities.Update(item);
+            _context.SaveChanges();
         }
     }
 }

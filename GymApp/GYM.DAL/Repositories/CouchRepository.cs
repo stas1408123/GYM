@@ -1,43 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GYM.DAL.EF;
 using GYM.DAL.Entities;
 using GYM.DAL.Repositories.Abstractions;
 
 namespace GYM.DAL.Repositories
 {
-    public class CouchRepository:IRepository<CouchEntity>
+    public class CouchRepository : IRepository<CouchEntity>
     {
+        private readonly GymAppDbContext _context;
+        public CouchRepository(GymAppDbContext context)
+        {
+            _context = context;
+        }
         public IEnumerable<CouchEntity> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.CouchEntities.ToList();
         }
 
-        public CouchEntity Get(int id)
+        public CouchEntity? Get(int id)
         {
-            throw new NotImplementedException();
+            return _context.CouchEntities.Find(id);
         }
 
         public IEnumerable<CouchEntity> Find(Func<CouchEntity, bool> predicate)
         {
-            throw new NotImplementedException();
+            return _context.CouchEntities.Where(predicate);
         }
 
         public void Create(CouchEntity item)
         {
-            throw new NotImplementedException();
+            _context.CouchEntities.Add(item);
+            _context.SaveChanges();
         }
 
         public void Update(CouchEntity item)
         {
-            throw new NotImplementedException();
+            _context.CouchEntities.Update(item);
+            _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            var item = _context.CouchEntities.Find(id);
+            if (item != null)
+            {
+                _context.CouchEntities.Remove(item);
+                return true;
+            }
+            return false;
         }
     }
 }
