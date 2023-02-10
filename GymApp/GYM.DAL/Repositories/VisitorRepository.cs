@@ -1,6 +1,8 @@
 ﻿using GYM.DAL.EF;
 using GYM.DAL.Entities;
 using GYM.DAL.Repositories.Abstractions;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace GYM.DAL.Repositories
 {
@@ -11,15 +13,15 @@ namespace GYM.DAL.Repositories
         {
             _context = context;
         }
-        public void Create(VisitorEntity item)
+        public async Task Create(VisitorEntity item)
         {
             _context.VisitorEntities.Add(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            var item = _context.VisitorEntities.Find(id);
+            var item = await _context.VisitorEntities.FindAsync(id);
             if (item != null)
             {
                 _context.VisitorEntities.Remove(item);
@@ -28,25 +30,24 @@ namespace GYM.DAL.Repositories
             return false;
         }
 
-        public IEnumerable<VisitorEntity> Find(Func<VisitorEntity, bool> predicate)
+        public async Task<IEnumerable<VisitorEntity>> Find(Expression<Func<VisitorEntity, bool>> predicate)
         {
-            return _context.VisitorEntities.Where(predicate); ;
+            return await _context.VisitorEntities.Where(predicate).ToListAsync();
+        }
+        public async Task<VisitorEntity?> Get(int id)
+        {
+            return await _context.VisitorEntities.FindAsync(id);
         }
 
-        public VisitorEntity? Get(int id)
+        public async Task<IEnumerable<VisitorEntity>> GetAll()
         {
-            return _context.VisitorEntities.Find(id);
+            return await _context.VisitorEntities.AsNoTracking().ToListAsync();
         }
 
-        public IEnumerable<VisitorEntity> GetAll()
-        {
-            return _context.VisitorEntities.ToList();
-        }
-
-        public void Update(VisitorEntity item)
+        public async Task Update(VisitorEntity item)
         {
             _context.VisitorEntities.Update(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

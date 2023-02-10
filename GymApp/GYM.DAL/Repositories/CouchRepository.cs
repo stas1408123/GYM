@@ -1,6 +1,8 @@
 ﻿using GYM.DAL.EF;
 using GYM.DAL.Entities;
 using GYM.DAL.Repositories.Abstractions;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace GYM.DAL.Repositories
 {
@@ -11,42 +13,43 @@ namespace GYM.DAL.Repositories
         {
             _context = context;
         }
-        public IEnumerable<CouchEntity> GetAll()
-        {
-            return _context.CouchEntities.ToList();
-        }
 
-        public CouchEntity? Get(int id)
-        {
-            return _context.CouchEntities.Find(id);
-        }
-
-        public IEnumerable<CouchEntity> Find(Func<CouchEntity, bool> predicate)
-        {
-            return _context.CouchEntities.Where(predicate);
-        }
-
-        public void Create(CouchEntity item)
+        public async Task Create(CouchEntity item)
         {
             _context.CouchEntities.Add(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(CouchEntity item)
+        public async Task<bool> Delete(int id)
         {
-            _context.CouchEntities.Update(item);
-            _context.SaveChanges();
-        }
-
-        public bool Delete(int id)
-        {
-            var item = _context.CouchEntities.Find(id);
+            var item = await _context.CouchEntities.FindAsync(id);
             if (item != null)
             {
                 _context.CouchEntities.Remove(item);
                 return true;
             }
             return false;
+        }
+
+        public async Task<IEnumerable<CouchEntity>> Find(Expression<Func<CouchEntity, bool>> predicate)
+        {
+            return await _context.CouchEntities.Where(predicate).ToListAsync();
+        }
+
+        public async Task<CouchEntity?> Get(int id)
+        {
+            return await _context.CouchEntities.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<CouchEntity>> GetAll()
+        {
+            return await _context.CouchEntities.AsNoTracking().ToListAsync();
+        }
+
+        public async Task Update(CouchEntity item)
+        {
+            _context.CouchEntities.Update(item);
+            await _context.SaveChangesAsync();
         }
     }
 }

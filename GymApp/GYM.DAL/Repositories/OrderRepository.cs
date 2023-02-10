@@ -1,6 +1,8 @@
 ﻿using GYM.DAL.EF;
 using GYM.DAL.Entities;
 using GYM.DAL.Repositories.Abstractions;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace GYM.DAL.Repositories
 {
@@ -12,15 +14,16 @@ namespace GYM.DAL.Repositories
         {
             _context = context;
         }
-        public void Create(OrderEntity item)
+
+        public async Task Create(OrderEntity item)
         {
             _context.OrderEntities.Add(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            var item = _context.OrderEntities.Find(id);
+            var item = await _context.OrderEntities.FindAsync(id);
             if (item != null)
             {
                 _context.OrderEntities.Remove(item);
@@ -29,25 +32,25 @@ namespace GYM.DAL.Repositories
             return false;
         }
 
-        public IEnumerable<OrderEntity> Find(Func<OrderEntity, bool> predicate)
+        public async Task<IEnumerable<OrderEntity>> Find(Expression<Func<OrderEntity, bool>> predicate)
         {
-            return _context.OrderEntities.Where(predicate);
+            return await _context.OrderEntities.Where(predicate).ToListAsync();
         }
 
-        public OrderEntity? Get(int id)
+        public async Task<OrderEntity?> Get(int id)
         {
-            return _context.OrderEntities.Find(id);
+            return await _context.OrderEntities.FindAsync(id);
         }
 
-        public IEnumerable<OrderEntity> GetAll()
+        public async Task<IEnumerable<OrderEntity>> GetAll()
         {
-            return _context.OrderEntities.ToList();
+            return await _context.OrderEntities.AsNoTracking().ToListAsync();
         }
 
-        public void Update(OrderEntity item)
+        public async Task Update(OrderEntity item)
         {
             _context.OrderEntities.Update(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

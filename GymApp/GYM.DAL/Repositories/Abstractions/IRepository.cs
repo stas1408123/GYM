@@ -1,12 +1,14 @@
-﻿namespace GYM.DAL.Repositories.Abstractions
+﻿using System.Linq.Expressions;
+
+namespace GYM.DAL.Repositories.Abstractions
 {
     public interface IRepository<T> where T : class
     {
-        IEnumerable<T> GetAll();
-        T? Get(int id);
-        IEnumerable<T> Find(Func<T, Boolean> predicate);
-        void Create(T item);
-        void Update(T item);
-        bool Delete(int id);
+        Task<IEnumerable<T>> GetAll();
+        Task<T?> Get(int id);
+        Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate);
+        Task Create(T item);
+        Task Update(T item);
+        Task<bool> Delete(int id);
     }
 }
