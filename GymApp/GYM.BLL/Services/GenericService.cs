@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace GYM.BLL.Services
 {
-    public class GenericService<TEntity, TModel> : IService<TModel>
+    public class GenericService<TEntity, TModel> : IGenericService<TModel>
         where TModel : class
         where TEntity : class
     {

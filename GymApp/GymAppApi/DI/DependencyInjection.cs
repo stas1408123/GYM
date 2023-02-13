@@ -11,9 +11,9 @@ namespace GYM.API.DI
         public static void AddDependenciesApi(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAutoMapper(typeof(ApiMappingProfile));
-            services.AddScoped<IService<OrderModel>, OrderService>();
-            services.AddScoped<IService<VisitorModel>, VisitorService>();
-            services.AddScoped<IService<CouchModel>, CouchService>();
+            services.AddScoped<IGenericService<OrderModel>, OrderService>();
+            services.AddScoped<IGenericService<VisitorModel>, VisitorService>();
+            services.AddScoped<IGenericService<CouchModel>, CouchService>();
             services.AddDependenciesBllLayer(configuration);
         }
     }

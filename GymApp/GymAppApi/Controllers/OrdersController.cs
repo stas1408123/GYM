@@ -10,10 +10,10 @@ namespace GYM.API.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        private readonly IService<OrderModel> _ordersService;
+        private readonly IGenericService<OrderModel> _ordersService;
         private readonly IMapper _mapper;
 
-        public OrdersController(IService<OrderModel> service, IMapper mapper)
+        public OrdersController(IGenericService<OrderModel> service, IMapper mapper)
         {
             _ordersService = service;
             _mapper = mapper;

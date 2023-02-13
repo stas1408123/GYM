@@ -10,10 +10,10 @@ namespace GYM.API.Controllers
     [ApiController]
     public class VisitorsController : ControllerBase
     {
-        private readonly IService<VisitorModel> _visitorService;
+        private readonly IGenericService<VisitorModel> _visitorService;
         private readonly IMapper _mapper;
 
-        public VisitorsController(IService<VisitorModel> service, IMapper mapper)
+        public VisitorsController(IGenericService<VisitorModel> service, IMapper mapper)
         {
             _visitorService = service;
             _mapper = mapper;

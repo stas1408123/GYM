@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 namespace GYM.BLL.Abstractions;
 
-public interface IService<TModel> where TModel : class
+public interface IGenericService<TModel> where TModel : class
 {
     Task<IEnumerable<TModel>> GetAll();
     Task<TModel?> Get(int id);
