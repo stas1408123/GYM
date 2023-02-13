@@ -1,7 +1,8 @@
-﻿using GYM.API.Data;
+﻿using AutoMapper;
 using GYM.API.Models;
+using GYM.BLL.Abstractions;
+using GYM.BLL.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace GYM.API.Controllers
 {
@@ -9,93 +10,68 @@ namespace GYM.API.Controllers
     [ApiController]
     public class VisitorsController : ControllerBase
     {
-        private readonly GymDbContext _context;
+        private readonly IGymService<VisitorModel> _visitorService;
+        private readonly IMapper _mapper;
 
-        public VisitorsController(GymDbContext context)
+        public VisitorsController(IGymService<VisitorModel> service, IMapper mapper)
         {
-            _context = context;
+            _visitorService = service;
+            _mapper = mapper;
         }
 
         // GET: api/Visitors
         [HttpGet]
         public async Task<ActionResult<IEnumerable<VisitorViewModel>>> GetVisitors()
         {
-            return await _context.Visitors.ToListAsync();
+            var visitorsModel = await _visitorService.GetAll();
+
+            return Ok(_mapper.Map<IEnumerable<VisitorModel>, IEnumerable<VisitorViewModel>>(visitorsModel));
         }
 
         // GET: api/Visitors/5
         [HttpGet("{id}")]
         public async Task<ActionResult<VisitorViewModel>> GetVisitor(int id)
         {
-            var visitor = await _context.Visitors.FindAsync(id);
-
-            if (visitor == null)
+            var visitorModel = await _visitorService.Get(id);
+            if (visitorModel == null)
             {
                 return NotFound();
             }
 
-            return visitor;
+            return Ok(_mapper.Map<VisitorViewModel>(visitorModel));
         }
 
         // PUT: api/Visitors/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVisitor(int id, VisitorViewModel visitor)
+        public async Task<IActionResult> PutVisitor(int id, VisitorViewModel visitorViewModel)
         {
-            if (id != visitor.Id)
-            {
-                return BadRequest();
-            }
+            var visitorModel = _mapper.Map<VisitorModel>(visitorViewModel);
+            visitorModel.Id = id;
+            await _visitorService.Update(visitorModel);
 
-            _context.Entry(visitor).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!VisitorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(visitorModel);
         }
 
         // POST: api/Visitors
         [HttpPost]
-        public async Task<ActionResult<VisitorViewModel>> PostVisitor(VisitorViewModel visitor)
+        public async Task<ActionResult<VisitorViewModel>> PostVisitor(VisitorViewModel visitorViewModel)
         {
-            _context.Visitors.Add(visitor);
-            await _context.SaveChangesAsync();
+            var visitorModel = _mapper.Map<VisitorModel>(visitorViewModel);
+            await _visitorService.Create(visitorModel);
 
-            return CreatedAtAction(nameof(GetVisitor), new { id = visitor.Id }, visitor);
+            return Ok(visitorModel);
         }
 
         // DELETE: api/Visitors/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVisitor(int id)
         {
-            var visitor = await _context.Visitors.FindAsync(id);
-            if (visitor == null)
+            if (await _visitorService.Delete(id))
             {
-                return NotFound();
+                return NoContent();
             }
 
-            _context.Visitors.Remove(visitor);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool VisitorExists(int id)
-        {
-            return _context.Visitors.Any(e => e.Id == id);
+            return NotFound();
         }
     }
 }

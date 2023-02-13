@@ -1,9 +1,11 @@
 using GYM.API.Data;
+using GYM.API.DI;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // Add services to the container.
+builder.Services.AddDependenciesApi(configuration);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<GymDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 

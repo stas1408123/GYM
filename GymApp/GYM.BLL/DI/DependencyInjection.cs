@@ -12,12 +12,11 @@ namespace GYM.BLL.DI
     {
         public static void AddDependenciesBllLayer(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAutoMapper(typeof(CouchModelMapping), typeof(OrderModelMapping), typeof(VisitorModelMapping));
+            services.AddAutoMapper(typeof(BllMappingProfile));
             services.AddScoped<IRepository<CouchEntity>, CouchRepository>();
             services.AddScoped<IRepository<OrderEntity>, OrderRepository>();
             services.AddScoped<IRepository<VisitorEntity>, VisitorRepository>();
             services.AddDependenciesDataAccessLayer(configuration);
         }
-
     }
 }
