@@ -40,16 +40,6 @@ namespace GYM.API.Controllers
             return Ok(orderModel);
         }
 
-        [HttpGet("find")]
-        public async Task<ActionResult<IEnumerable<OrderViewModel>>> FindByParams(int id, double costFrom, double costTo)
-        {
-            Request.Headers.Add();
-            var ordersModel = await _ordersService.GetAll();
-            var ordersViewModel = _mapper.Map<IEnumerable<OrderModel>, IEnumerable<OrderViewModel>>(ordersModel);
-
-            return Ok(ordersViewModel.Where(t => t.Cost > costFrom && t.Cost < costTo));
-        }
-
         // PUT: api/Orders/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(int id, OrderViewModel orderViewModelModel)
