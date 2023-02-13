@@ -10,10 +10,10 @@ namespace GYM.API.Controllers
     [ApiController]
     public class CouchesController : ControllerBase
     {
-        private readonly IGymService<CouchModel> _couchService;
+        private readonly IService<CouchModel> _couchService;
         private readonly IMapper _mapper;
 
-        public CouchesController(IGymService<CouchModel> service, IMapper mapper)
+        public CouchesController(IService<CouchModel> service, IMapper mapper)
         {
             _couchService = service;
             _mapper = mapper;
