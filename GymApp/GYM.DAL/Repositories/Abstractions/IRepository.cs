@@ -6,7 +6,7 @@ namespace GYM.DAL.Repositories.Abstractions
     {
         Task<IEnumerable<T>> GetAll();
         Task<T?> Get(int id);
-        Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> Get(Expression<Func<T, bool>> predicate);
         Task Create(T item);
         Task Update(T item);
         Task<bool> Delete(int id);

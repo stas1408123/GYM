@@ -32,7 +32,7 @@ namespace GYM.DAL.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<OrderEntity>> Find(Expression<Func<OrderEntity, bool>> predicate)
+        public async Task<IEnumerable<OrderEntity>> Get(Expression<Func<OrderEntity, bool>> predicate)
         {
             return await _context.OrderEntities.Where(predicate).ToListAsync();
         }

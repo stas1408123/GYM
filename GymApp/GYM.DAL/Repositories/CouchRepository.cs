@@ -31,7 +31,7 @@ namespace GYM.DAL.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<CouchEntity>> Find(Expression<Func<CouchEntity, bool>> predicate)
+        public async Task<IEnumerable<CouchEntity>> Get(Expression<Func<CouchEntity, bool>> predicate)
         {
             return await _context.CouchEntities.Where(predicate).ToListAsync();
         }

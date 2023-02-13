@@ -29,10 +29,10 @@ namespace GYM.BLL.Services
             return await _repository.Delete(id);
         }
 
-        public async Task<IEnumerable<VisitorModel>> Find(Expression<Func<VisitorModel, bool>> predicate)
+        public async Task<IEnumerable<VisitorModel>> Get(Expression<Func<VisitorModel, bool>> predicate)
         {
             var entityPredicate = _mapper.Map<Expression<Func<VisitorEntity, bool>>>(predicate);
-            var couchEntities = await _repository.Find(entityPredicate);
+            var couchEntities = await _repository.Get(entityPredicate);
             return _mapper.Map<IEnumerable<VisitorModel>>(couchEntities);
         }
 

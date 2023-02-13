@@ -28,10 +28,10 @@ namespace GYM.BLL.Services
             return await _repository.Delete(id);
         }
 
-        public async Task<IEnumerable<OrderModel>> Find(Expression<Func<OrderModel, bool>> predicate)
+        public async Task<IEnumerable<OrderModel>> Get(Expression<Func<OrderModel, bool>> predicate)
         {
             var entityPredicate = _mapper.Map<Expression<Func<OrderEntity, bool>>>(predicate);
-            var couchEntities = await _repository.Find(entityPredicate);
+            var couchEntities = await _repository.Get(entityPredicate);
             return _mapper.Map<IEnumerable<OrderModel>>(couchEntities);
         }
 
