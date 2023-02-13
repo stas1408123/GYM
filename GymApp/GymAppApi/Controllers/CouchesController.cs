@@ -1,7 +1,8 @@
-﻿using GYM.API.Data;
+﻿using AutoMapper;
 using GYM.API.Models;
+using GYM.BLL.Abstractions;
+using GYM.BLL.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace GYM.API.Controllers
 {
@@ -9,93 +10,68 @@ namespace GYM.API.Controllers
     [ApiController]
     public class CouchesController : ControllerBase
     {
-        private readonly GymDbContext _context;
+        private readonly IGymService<CouchModel> _couchService;
+        private readonly IMapper _mapper;
 
-        public CouchesController(GymDbContext context)
+        public CouchesController(IGymService<CouchModel> service, IMapper mapper)
         {
-            _context = context;
+            _couchService = service;
+            _mapper = mapper;
         }
 
         // GET: api/Couches
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CouchViewModel>>> GetCouches()
         {
-            return await _context.Couches.ToListAsync();
+            var couchesModel = await _couchService.GetAll();
+
+            return Ok(_mapper.Map<IEnumerable<CouchModel>, IEnumerable<CouchViewModel>>(couchesModel));
         }
 
         // GET: api/Couches/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CouchViewModel>> GetCouch(int id)
         {
-            var couch = await _context.Couches.FindAsync(id);
-
-            if (couch == null)
+            var couchModel = await _couchService.Get(id);
+            if (couchModel == null)
             {
                 return NotFound();
             }
 
-            return couch;
+            return Ok(_mapper.Map<CouchViewModel>(couchModel));
         }
 
         // PUT: api/Couches/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCouch(int id, CouchViewModel couch)
+        public async Task<IActionResult> PutCouch(int id, CouchViewModel couchViewModel)
         {
-            if (id != couch.Id)
-            {
-                return BadRequest();
-            }
+            var couchModel = _mapper.Map<CouchModel>(couchViewModel);
+            couchModel.Id = id;
+            await _couchService.Update(couchModel);
 
-            _context.Entry(couch).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CouchExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(couchModel);
         }
 
         // POST: api/Couches
         [HttpPost]
-        public async Task<ActionResult<CouchViewModel>> PostCouch(CouchViewModel couch)
+        public async Task<ActionResult<CouchViewModel>> PostCouch(CouchViewModel couchViewModel)
         {
-            _context.Couches.Add(couch);
-            await _context.SaveChangesAsync();
+            var couchModel = _mapper.Map<CouchModel>(couchViewModel);
+            await _couchService.Create(couchModel);
 
-            return CreatedAtAction(nameof(GetCouch), new { id = couch.Id }, couch);
+            return Ok(couchModel);
         }
 
         // DELETE: api/Couches/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCouch(int id)
         {
-            var couch = await _context.Couches.FindAsync(id);
-            if (couch == null)
+            if (await _couchService.Delete(id))
             {
-                return NotFound();
+                return NoContent();
             }
 
-            _context.Couches.Remove(couch);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool CouchExists(int id)
-        {
-            return _context.Couches.Any(e => e.Id == id);
+            return NotFound();
         }
     }
 }
