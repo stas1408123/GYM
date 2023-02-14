@@ -1,6 +1,6 @@
 using GYM.API.Data;
 using GYM.API.DI;
-using GYM.API.Extensions;
+using GYM.API.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +23,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.ConfigureExceptionHandler(logger);
+
+app.UseMiddleware<CustomExceptionHandler>();
+//app.ConfigureExceptionHandler(logger);
 
 app.UseHttpsRedirection();
 
