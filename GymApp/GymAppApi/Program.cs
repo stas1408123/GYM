@@ -15,7 +15,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -25,7 +24,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<CustomExceptionHandler>();
-//app.ConfigureExceptionHandler(logger);
 
 app.UseHttpsRedirection();
 
