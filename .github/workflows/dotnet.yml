@@ -23,8 +23,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: ${{ env.SOLUTION_PATH }}dotnet restore
+      run: ${{ env.SOLUTION_PATH }} dotnet restore
     - name: Build
-      run: ${{ env.SOLUTION_PATH }}dotnet build --no-restore
+      run: ${{ env.SOLUTION_PATH }} dotnet build --no-restore
     - name: Test
-      run: ${{ env.SOLUTION_PATH }}dotnet test --no-build --verbosity normal
+      run: ${{ env.SOLUTION_PATH }} dotnet test --no-build --verbosity normal
