@@ -22,13 +22,13 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       run: |
-           cd ./GYM 
+           cd ./GymApp 
            dotnet restore
     - name: Build
       run: |
-           cd ./GYM 
+           cd ./GymApp 
            dotnet build --no-restore
-    #- name: Test
-    #  run: |
-    #      cd ./GYM
-    #      dotnet test --no-build --verbosity normal
+    - name: Test
+      run: |
+           cd ./GymApp
+           dotnet test --no-build --verbosity normal
