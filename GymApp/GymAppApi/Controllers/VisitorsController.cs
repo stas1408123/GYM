@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GYM.API.Models;
 using GYM.BLL.Abstractions;
 using GYM.BLL.Models;
@@ -12,11 +13,13 @@ namespace GYM.API.Controllers
     {
         private readonly IGenericService<VisitorModel> _visitorService;
         private readonly IMapper _mapper;
+        private readonly IValidator<VisitorViewModel> _validator;
 
-        public VisitorsController(IGenericService<VisitorModel> service, IMapper mapper)
+        public VisitorsController(IGenericService<VisitorModel> service, IMapper mapper, IValidator<VisitorViewModel> validator)
         {
             _visitorService = service;
             _mapper = mapper;
+            _validator = validator;
         }
 
         // GET: api/Visitors
@@ -45,6 +48,7 @@ namespace GYM.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVisitor(int id, VisitorViewModel visitorViewModel)
         {
+            await _validator.ValidateAndThrowAsync(visitorViewModel);
             var visitorModel = _mapper.Map<VisitorModel>(visitorViewModel);
             visitorModel.Id = id;
             await _visitorService.Update(visitorModel);
@@ -56,6 +60,7 @@ namespace GYM.API.Controllers
         [HttpPost]
         public async Task<ActionResult<VisitorViewModel>> PostVisitor(VisitorViewModel visitorViewModel)
         {
+            await _validator.ValidateAndThrowAsync(visitorViewModel);
             var visitorModel = _mapper.Map<VisitorModel>(visitorViewModel);
             await _visitorService.Create(visitorModel);
 

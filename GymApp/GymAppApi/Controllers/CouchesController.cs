@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GYM.API.Models;
 using GYM.BLL.Abstractions;
 using GYM.BLL.Models;
@@ -12,11 +13,13 @@ namespace GYM.API.Controllers
     {
         private readonly IGenericService<CouchModel> _couchService;
         private readonly IMapper _mapper;
+        private readonly IValidator<CouchViewModel> _validator;
 
-        public CouchesController(IGenericService<CouchModel> service, IMapper mapper)
+        public CouchesController(IGenericService<CouchModel> service, IMapper mapper, IValidator<CouchViewModel> validator)
         {
             _couchService = service;
             _mapper = mapper;
+            _validator = validator;
         }
 
         // GET: api/Couches
@@ -45,6 +48,7 @@ namespace GYM.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCouch(int id, CouchViewModel couchViewModel)
         {
+            await _validator.ValidateAndThrowAsync(couchViewModel);
             var couchModel = _mapper.Map<CouchModel>(couchViewModel);
             couchModel.Id = id;
             await _couchService.Update(couchModel);
@@ -56,6 +60,7 @@ namespace GYM.API.Controllers
         [HttpPost]
         public async Task<ActionResult<CouchViewModel>> PostCouch(CouchViewModel couchViewModel)
         {
+            await _validator.ValidateAndThrowAsync(couchViewModel);
             var couchModel = _mapper.Map<CouchModel>(couchViewModel);
             await _couchService.Create(couchModel);
 

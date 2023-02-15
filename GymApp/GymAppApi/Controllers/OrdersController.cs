@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GYM.API.Models;
 using GYM.BLL.Abstractions;
 using GYM.BLL.Models;
@@ -12,11 +13,13 @@ namespace GYM.API.Controllers
     {
         private readonly IGenericService<OrderModel> _ordersService;
         private readonly IMapper _mapper;
+        private readonly IValidator<OrderViewModel> _validator;
 
-        public OrdersController(IGenericService<OrderModel> service, IMapper mapper)
+        public OrdersController(IGenericService<OrderModel> service, IMapper mapper, IValidator<OrderViewModel> validator)
         {
             _ordersService = service;
             _mapper = mapper;
+            _validator = validator;
         }
 
         // GET: api/Orders
@@ -44,6 +47,7 @@ namespace GYM.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(int id, OrderViewModel orderViewModelModel)
         {
+            await _validator.ValidateAndThrowAsync(orderViewModelModel);
             var orderModel = _mapper.Map<OrderModel>(orderViewModelModel);
             orderModel.Id = id;
             await _ordersService.Update(orderModel);
@@ -55,6 +59,7 @@ namespace GYM.API.Controllers
         [HttpPost]
         public async Task<ActionResult<OrderViewModel>> PostOrder(OrderViewModel orderViewModel)
         {
+            await _validator.ValidateAndThrowAsync(orderViewModel);
             var orderModel = _mapper.Map<OrderModel>(orderViewModel);
             await _ordersService.Create(orderModel);
 

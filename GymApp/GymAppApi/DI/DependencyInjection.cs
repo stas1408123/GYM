@@ -1,4 +1,6 @@
-﻿using GYM.API.Mapping;
+﻿using FluentValidation;
+using GYM.API.Mapping;
+using GYM.API.Validators;
 using GYM.BLL.Abstractions;
 using GYM.BLL.DI;
 using GYM.BLL.Models;
@@ -14,6 +16,7 @@ namespace GYM.API.DI
             services.AddScoped<IGenericService<OrderModel>, OrderService>();
             services.AddScoped<IGenericService<VisitorModel>, VisitorService>();
             services.AddScoped<IGenericService<CouchModel>, CouchService>();
+            services.AddValidatorsFromAssemblyContaining<CouchValidator>();
             services.AddDependenciesBllLayer(configuration);
         }
     }
