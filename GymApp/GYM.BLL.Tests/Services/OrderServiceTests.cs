@@ -24,7 +24,7 @@ namespace GYM.BLL.Tests.Services
         }
 
         [Fact]
-        public async Task GetALL_ReturnsAllOrdersModel_CheckCostGreaterZero()
+        public async Task GetALL_CheckCostGreaterZero_ReturnsOrderModels()
         {
             //Arrange
             _repository.Setup(cr => cr.GetAll()).ReturnsAsync(TestEntities.GetOrderEntitiesForTest());
@@ -44,7 +44,7 @@ namespace GYM.BLL.Tests.Services
         [InlineData(2)]
         [InlineData(3)]
         [InlineData(4)]
-        public async Task Get_ReturnsOrderModel_CheckType(int id)
+        public async Task Get_InputValidIdCheckType_ReturnsOrderModel(int id)
         {
             //Arrange
             _repository.Setup(cr => cr.Get(It.IsAny<int>())).ReturnsAsync(TestEntities.GetOrderEntitiesForTest().FirstOrDefault(ce => ce.Id == id));
@@ -61,7 +61,7 @@ namespace GYM.BLL.Tests.Services
         [Theory]
         [InlineData(0)]
         [InlineData(5)]
-        public async Task Get_ReturnsNull_CheckOnNull(int id)
+        public async Task Get_InputInvalidIdCheckNull_ReturnsNull(int id)
         {
             //Arrange
             _repository.Setup(cr => cr.Get(It.IsAny<int>())).ReturnsAsync(TestEntities.GetOrderEntitiesForTest().FirstOrDefault(ce => ce.Id == id));
@@ -80,7 +80,7 @@ namespace GYM.BLL.Tests.Services
         [InlineData("Full-body program #2")]
         [InlineData("Cross-fit #5")]
         [InlineData("Full-body program #7")]
-        public async Task Get_ReturnsVisitorModelByPredicate_CheckTitle(string expectedTitle)
+        public async Task Get_InputPredicateCheckTitle_ReturnsVisitorModels(string expectedTitle)
         {
             //Arrange
             Expression<Func<OrderEntity, bool>> entityPredicate = (pe) => pe.Title == expectedTitle;
@@ -108,7 +108,7 @@ namespace GYM.BLL.Tests.Services
         public async Task Create_InputOrderModelSaveOrderEntity_VerifyInvokeCreate()
         {
             //Arrange
-            int id = 1;
+            var id = 1;
             var orderEntity = TestEntities.GetOrderEntitiesForTest().FirstOrDefault(e => e.Id == id)!;
             var orderModel = TestModels.GetOrderModelsForTest().FirstOrDefault(e => e.Id == id)!;
 
@@ -122,10 +122,10 @@ namespace GYM.BLL.Tests.Services
         }
 
         [Fact]
-        public async Task Update_InputOrderModelSaveOrderEntity_VerifyInvokeUpdate()
+        public async Task Update_InputOrderModelUpdateOrderEntity_VerifyInvokeUpdate()
         {
             //Arrange
-            int id = 1;
+            var id = 1;
             var orderEntity = TestEntities.GetOrderEntitiesForTest().FirstOrDefault(e => e.Id == id)!;
             var orderModel = TestModels.GetOrderModelsForTest().FirstOrDefault(e => e.Id == id)!;
 
@@ -139,11 +139,11 @@ namespace GYM.BLL.Tests.Services
         }
 
         [Fact]
-        public async Task Delete_ReturnsPositiveResult()
+        public async Task Delete_InputValidId_ReturnsTrue()
         {
             //Arrange
-            int id = 1;
-            bool deleteResult = true;
+            var id = 1;
+            var deleteResult = true;
 
             _repository.Setup(r => r.Delete(It.IsAny<int>())).ReturnsAsync(deleteResult);
 
@@ -156,11 +156,11 @@ namespace GYM.BLL.Tests.Services
 
 
         [Fact]
-        public async Task Delete_ReturnsNegativeResult()
+        public async Task Delete_InputInvalidId_ReturnsFalse()
         {
             //Arrange
-            int id = 1;
-            bool deleteResult = false;
+            var id = 4;
+            var deleteResult = false;
 
             _repository.Setup(r => r.Delete(It.IsAny<int>())).ReturnsAsync(deleteResult);
 

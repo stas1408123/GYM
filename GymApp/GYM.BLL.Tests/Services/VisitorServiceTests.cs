@@ -25,7 +25,7 @@ namespace GYM.BLL.Tests.Services
         }
 
         [Fact]
-        public async Task GetALL_ReturnsAllVisitorModel_CheckCountCouchesAndOrders()
+        public async Task GetALL_CheckCountCouchesAndOrders_ReturnsVisitorModels()
         {
             //Arrange
             _repository.Setup(cr => cr.GetAll()).ReturnsAsync(TestEntities.GetVisitorEntitiesForTest());
@@ -46,7 +46,7 @@ namespace GYM.BLL.Tests.Services
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        public async Task Get_ReturnsVisitorModel_CheckOnType(int id)
+        public async Task Get_InputValidIdCheckType_ReturnsVisitorModel(int id)
         {
             //Arrange
             _repository.Setup(cr => cr.Get(It.IsAny<int>())).ReturnsAsync(TestEntities.GetVisitorEntitiesForTest().FirstOrDefault(ce => ce.Id == id));
@@ -63,7 +63,7 @@ namespace GYM.BLL.Tests.Services
         [Theory]
         [InlineData(0)]
         [InlineData(4)]
-        public async Task Get_ReturnsNull_CheckOnNull(int id)
+        public async Task Get_InputInvalidIdCheckNull_ReturnsNull(int id)
         {
             //Arrange
             _repository.Setup(cr => cr.Get(It.IsAny<int>())).ReturnsAsync(TestEntities.GetVisitorEntitiesForTest().FirstOrDefault(ce => ce.Id == id));
@@ -81,7 +81,7 @@ namespace GYM.BLL.Tests.Services
         [InlineData("Connor")]
         [InlineData("Margaret")]
         [InlineData("Emma")]
-        public async Task Get_ReturnsVisitorModelByPredicate_CheckName(string name)
+        public async Task Get_InputPredicateCheckName_ReturnsVisitorModels(string name)
         {
             //Arrange
             Expression<Func<VisitorEntity, bool>> predicateEntity = (pe) => pe.FirstName == name;
@@ -109,7 +109,7 @@ namespace GYM.BLL.Tests.Services
         public async Task Create_InputVisitorModelSaveVisitorEntity_VerifyInvokeCreate()
         {
             //Arrange
-            int id = 1;
+            var id = 1;
             var visitorEntity = TestEntities.GetVisitorEntitiesForTest().FirstOrDefault(e => e.Id == id)!;
             var visitorModel = TestModels.GetVisitorModelsForTest().FirstOrDefault(e => e.Id == id)!;
 
@@ -123,10 +123,10 @@ namespace GYM.BLL.Tests.Services
         }
 
         [Fact]
-        public async Task Update_InputCouchModelSaveCouchEntity_VerifyInvokeUpdate()
+        public async Task Update_InputCouchModelUpdateCouchEntity_VerifyInvokeUpdate()
         {
             //Arrange
-            int id = 1;
+            var id = 1;
             var visitorEntity = TestEntities.GetVisitorEntitiesForTest().FirstOrDefault(e => e.Id == id)!;
             var visitorModel = TestModels.GetVisitorModelsForTest().FirstOrDefault(e => e.Id == id)!;
 
@@ -140,11 +140,11 @@ namespace GYM.BLL.Tests.Services
         }
 
         [Fact]
-        public async Task Delete_ReturnsPositiveResult()
+        public async Task Delete_InputValidId_ReturnsTrue()
         {
             //Arrange
-            int id = 1;
-            bool deleteResult = true;
+            var id = 1;
+            var deleteResult = true;
 
             _repository.Setup(r => r.Delete(It.IsAny<int>())).ReturnsAsync(deleteResult);
 
@@ -156,11 +156,11 @@ namespace GYM.BLL.Tests.Services
         }
 
         [Fact]
-        public async Task Delete_ReturnsNegativeResult()
+        public async Task Delete_InputInvalidId_ReturnsFalse()
         {
             //Arrange
-            int id = 1;
-            bool deleteResult = false;
+            var id = 5;
+            var deleteResult = false;
 
             _repository.Setup(r => r.Delete(It.IsAny<int>())).ReturnsAsync(deleteResult);
 
