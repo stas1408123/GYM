@@ -53,6 +53,7 @@ namespace GYM.BLL.Tests.Services
             var orderModelResult = await _orderService.Get(id);
 
             //Assert
+            orderModelResult!.Id.ShouldBe(id);
             orderModelResult.ShouldBeOfType(typeof(OrderModel));
         }
 

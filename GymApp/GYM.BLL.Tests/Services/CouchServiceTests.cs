@@ -51,6 +51,7 @@ namespace GYM.BLL.Tests.Services
             var resultCouchesModel = await _couchService.Get(id);
 
             //Assert
+            resultCouchesModel!.Id.ShouldBe(id);
             resultCouchesModel.ShouldBeOfType(typeof(CouchModel));
         }
 

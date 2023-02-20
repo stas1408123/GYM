@@ -23,7 +23,7 @@ namespace GYM.BLL.Tests.Services
         }
 
         [Fact]
-        public async Task GetALL_ReturnsVisitorModels()
+        public async Task GetALL_HasNotData_ReturnsVisitorModels()
         {
             //Arrange
             _repository.Setup(cr => cr.GetAll()).ReturnsAsync(TestEntities.GetVisitorEntitiesForTest());
@@ -55,6 +55,7 @@ namespace GYM.BLL.Tests.Services
             var visitorModelResult = await _visitorService.Get(id);
 
             //Assert
+            visitorModelResult!.Id.ShouldBe(id);
             visitorModelResult.ShouldBeOfType(typeof(VisitorModel));
         }
 
