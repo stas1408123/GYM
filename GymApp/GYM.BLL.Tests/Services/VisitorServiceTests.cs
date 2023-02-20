@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GYM.BLL.Abstractions;
 using GYM.BLL.Models;
 using GYM.BLL.Services;
 using GYM.BLL.Tests.TestData;
@@ -12,20 +13,19 @@ namespace GYM.BLL.Tests.Services
 {
     public class VisitorServiceTests
     {
-        private readonly Mock<IMapper> _mapperMoq;
-        private readonly Mock<IRepository<VisitorEntity>> _repository;
+        private readonly IGenericService<VisitorModel> _visitorService;
+        private readonly Mock<IMapper> _mapperMoq = new();
+        private readonly Mock<IRepository<VisitorEntity>> _repository = new();
 
         public VisitorServiceTests()
         {
-            _mapperMoq = new Mock<IMapper>();
-            _repository = new Mock<IRepository<VisitorEntity>>();
+            _visitorService = new VisitorService(_repository.Object, _mapperMoq.Object);
         }
 
         [Fact]
         public async Task GetALL_ReturnsVisitorModels()
         {
             //Arrange
-            var visitorService = new VisitorService(_repository.Object, _mapperMoq.Object);
             _repository.Setup(cr => cr.GetAll()).ReturnsAsync(TestEntities.GetVisitorEntitiesForTest());
 
             _mapperMoq.Setup(m =>
@@ -34,7 +34,7 @@ namespace GYM.BLL.Tests.Services
                 .Returns(TestModels.GetVisitorModelsForTest);
 
             //Act
-            var resultVisitorModel = await visitorService.GetAll();
+            var resultVisitorModel = await _visitorService.GetAll();
 
             //Assert
             resultVisitorModel.ShouldAllBe(v => v.Couches!.Count == 0 && v.Orders!.Count == 0);
@@ -47,13 +47,12 @@ namespace GYM.BLL.Tests.Services
         public async Task Get_InputValidId_ReturnsVisitorModel(int id)
         {
             //Arrange
-            var visitorService = new VisitorService(_repository.Object, _mapperMoq.Object);
             _repository.Setup(cr => cr.Get(It.IsAny<int>())).ReturnsAsync(TestEntities.GetVisitorEntitiesForTest().FirstOrDefault(ce => ce.Id == id));
 
             _mapperMoq.Setup(m => m.Map<VisitorModel>(It.IsAny<VisitorEntity>())).Returns(TestModels.GetVisitorModelsForTest().FirstOrDefault(cm => cm.Id == id)!);
 
             //Act
-            var visitorModelResult = await visitorService.Get(id);
+            var visitorModelResult = await _visitorService.Get(id);
 
             //Assert
             visitorModelResult.ShouldBeOfType(typeof(VisitorModel));
@@ -65,13 +64,12 @@ namespace GYM.BLL.Tests.Services
         public async Task Get_InputInvalidId_ReturnsNull(int id)
         {
             //Arrange
-            var visitorService = new VisitorService(_repository.Object, _mapperMoq.Object);
             _repository.Setup(cr => cr.Get(It.IsAny<int>())).ReturnsAsync(TestEntities.GetVisitorEntitiesForTest().FirstOrDefault(ce => ce.Id == id));
 
             _mapperMoq.Setup(m => m.Map<VisitorModel>(It.IsAny<VisitorEntity>())).Returns(TestModels.GetVisitorModelsForTest().FirstOrDefault(cm => cm.Id == id)!);
 
             //Act
-            var visitorModelResult = await visitorService.Get(id);
+            var visitorModelResult = await _visitorService.Get(id);
 
             //Assert
             visitorModelResult.ShouldBeNull();
@@ -84,7 +82,6 @@ namespace GYM.BLL.Tests.Services
         public async Task Get_InputPredicate_ReturnsVisitorModels(string name)
         {
             //Arrange
-            var visitorService = new VisitorService(_repository.Object, _mapperMoq.Object);
             Expression<Func<VisitorEntity, bool>> predicateEntity = (pe) => pe.FirstName == name;
             Expression<Func<VisitorModel, bool>> modelPredicate = (mp) => mp.FirstName == name;
 
@@ -100,7 +97,7 @@ namespace GYM.BLL.Tests.Services
             _mapperMoq.Setup(m => m.Map<IEnumerable<VisitorEntity>, IEnumerable<VisitorModel>>(It.IsAny<IEnumerable<VisitorEntity>>())).Returns(TestModels.GetVisitorModelsForTest().Where(ce => ce.FirstName == name));
 
             //Act
-            var visitorModelResult = await visitorService.Get(modelPredicate);
+            var visitorModelResult = await _visitorService.Get(modelPredicate);
 
             //Assert
             visitorModelResult.ShouldContain(vm => vm.FirstName == name);
@@ -111,11 +108,10 @@ namespace GYM.BLL.Tests.Services
         public async Task Create_InputVisitorModel_VerifyInvokeCreate(VisitorEntity visitorEntity, VisitorModel visitorModel)
         {
             //Arrange
-            var visitorService = new VisitorService(_repository.Object, _mapperMoq.Object);
             _mapperMoq.Setup(m => m.Map<VisitorEntity>(It.IsAny<VisitorModel>())).Returns(visitorEntity);
 
             //Act
-            await visitorService.Create(visitorModel);
+            await _visitorService.Create(visitorModel);
 
             //Assert
             _repository.Verify(p => p.Create(It.IsAny<VisitorEntity>()), Times.Once);
@@ -126,11 +122,10 @@ namespace GYM.BLL.Tests.Services
         public async Task Update_InputCouchModel_VerifyInvokeUpdate(VisitorEntity visitorEntity, VisitorModel visitorModel)
         {
             //Arrange
-            var visitorService = new VisitorService(_repository.Object, _mapperMoq.Object);
             _mapperMoq.Setup(m => m.Map<VisitorEntity>(It.IsAny<VisitorModel>())).Returns(visitorEntity);
 
             //Act
-            await visitorService.Update(visitorModel);
+            await _visitorService.Update(visitorModel);
 
             //Assert
             _repository.Verify(p => p.Update(It.IsAny<VisitorEntity>()), Times.Once);
@@ -140,13 +135,12 @@ namespace GYM.BLL.Tests.Services
         public async Task Delete_InputValidId_ReturnsTrue()
         {
             //Arrange
-            var visitorService = new VisitorService(_repository.Object, _mapperMoq.Object);
             var id = 1;
             var deleteResult = true;
             _repository.Setup(r => r.Delete(It.IsAny<int>())).ReturnsAsync(deleteResult);
 
             //Act
-            var result = await visitorService.Delete(id);
+            var result = await _visitorService.Delete(id);
 
             //Assert
             result.ShouldBeTrue();
@@ -156,13 +150,12 @@ namespace GYM.BLL.Tests.Services
         public async Task Delete_InputInvalidId_ReturnsFalse()
         {
             //Arrange
-            var visitorService = new VisitorService(_repository.Object, _mapperMoq.Object);
             var id = 5;
             var deleteResult = false;
             _repository.Setup(r => r.Delete(It.IsAny<int>())).ReturnsAsync(deleteResult);
 
             //Act
-            var result = await visitorService.Delete(id);
+            var result = await _visitorService.Delete(id);
 
             //Assert
             result.ShouldBeFalse();

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GYM.BLL.Abstractions;
 using GYM.BLL.Models;
 using GYM.BLL.Services;
 using GYM.BLL.Tests.TestData;
@@ -12,26 +13,24 @@ namespace GYM.BLL.Tests.Services
 {
     public class CouchServiceTests
     {
-        private readonly Mock<IMapper> _mapperMoq;
-        private readonly Mock<IRepository<CouchEntity>> _repository;
+        private readonly IGenericService<CouchModel> _couchService;
+        private readonly Mock<IMapper> _mapperMoq = new();
+        private readonly Mock<IRepository<CouchEntity>> _repository = new();
 
         public CouchServiceTests()
         {
-            _mapperMoq = new Mock<IMapper>();
-            _repository = new Mock<IRepository<CouchEntity>>();
+            _couchService = new CouchService(_repository.Object, _mapperMoq.Object);
         }
 
         [Fact]
-        public async Task GetALL_ReturnsCouchModels()
+        public async Task GetALL_HasNotData_ReturnsCouchModels()
         {
             //Arrange
-            var couchService = new CouchService(_repository.Object, _mapperMoq.Object);
             _repository.Setup(cr => cr.GetAll()).ReturnsAsync(TestEntities.GetCouchEntitiesForTest());
-
             _mapperMoq.Setup(m => m.Map<IEnumerable<CouchEntity>, IEnumerable<CouchModel>>(It.IsAny<IEnumerable<CouchEntity>>())).Returns(TestModels.GetCouchModelsForTest());
 
             //Act
-            var resultCouchesModel = await couchService.GetAll();
+            var resultCouchesModel = await _couchService.GetAll();
 
             //Assert
             resultCouchesModel.ShouldAllBe(c => c.Visitors == null);
@@ -44,13 +43,12 @@ namespace GYM.BLL.Tests.Services
         public async Task Get_InputValidId_ReturnsCouchesModel(int id)
         {
             //Arrange
-            var couchService = new CouchService(_repository.Object, _mapperMoq.Object);
             _repository.Setup(cr => cr.Get(It.IsAny<int>())).ReturnsAsync(TestEntities.GetCouchEntitiesForTest().FirstOrDefault(ce => ce.Id == id));
 
             _mapperMoq.Setup(m => m.Map<CouchModel>(It.IsAny<CouchEntity>())).Returns(TestModels.GetCouchModelsForTest().FirstOrDefault(cm => cm.Id == id)!);
 
             //Act
-            var resultCouchesModel = await couchService.Get(id);
+            var resultCouchesModel = await _couchService.Get(id);
 
             //Assert
             resultCouchesModel.ShouldBeOfType(typeof(CouchModel));
@@ -81,12 +79,10 @@ namespace GYM.BLL.Tests.Services
         public async Task Get_InputPredicate_ReturnsCouchesModel(string expectedName)
         {
             //Arrange
-            var couchService = new CouchService(_repository.Object, _mapperMoq.Object);
             Expression<Func<CouchEntity, bool>> predicateEntity = (pe) => pe.FirstName == expectedName;
             Expression<Func<CouchModel, bool>> modelPredicate = (mp) => mp.FirstName == expectedName;
 
             _repository.Setup(cr => cr.Get(It.IsAny<Expression<Func<CouchEntity, bool>>>())).ReturnsAsync(TestEntities.GetCouchEntitiesForTest());
-
             _mapperMoq.Setup(m =>
                     m.Map<Expression<Func<CouchEntity, bool>>>(It.IsAny<Expression<Func<CouchModel, bool>>>()))
                 .Returns(predicateEntity);
@@ -98,7 +94,7 @@ namespace GYM.BLL.Tests.Services
                 .Returns(TestModels.GetCouchModelsForTest().Where(ce => ce.FirstName == expectedName));
 
             //Act
-            var resultCouchesModel = await couchService.Get(modelPredicate);
+            var resultCouchesModel = await _couchService.Get(modelPredicate);
 
             //Assert
             resultCouchesModel.ShouldAllBe(c => c.FirstName == expectedName);
@@ -109,11 +105,10 @@ namespace GYM.BLL.Tests.Services
         public async Task Create_InputCouchModel_VerifyInvokeCreate(CouchEntity couchEntity, CouchModel couchModel)
         {
             //Arrange
-            var couchService = new CouchService(_repository.Object, _mapperMoq.Object);
             _mapperMoq.Setup(m => m.Map<CouchEntity>(It.IsAny<CouchModel>())).Returns(couchEntity);
 
             //Act
-            await couchService.Create(couchModel);
+            await _couchService.Create(couchModel);
 
             //Assert
             _repository.Verify(p => p.Create(It.IsAny<CouchEntity>()), Times.Once);
@@ -125,11 +120,10 @@ namespace GYM.BLL.Tests.Services
         public async Task Update_InputCouchModel_VerifyInvokeUpdate(CouchEntity couchEntity, CouchModel couchModel)
         {
             //Arrange
-            var couchService = new CouchService(_repository.Object, _mapperMoq.Object);
             _mapperMoq.Setup(m => m.Map<CouchEntity>(It.IsAny<CouchModel>())).Returns(couchEntity);
 
             //Act
-            await couchService.Update(couchModel);
+            await _couchService.Update(couchModel);
 
             //Assert
             _repository.Verify(p => p.Update(It.IsAny<CouchEntity>()), Times.Once);
@@ -139,13 +133,12 @@ namespace GYM.BLL.Tests.Services
         public async Task Delete_InputValidId_ReturnsTrue()
         {
             //Arrange
-            var couchService = new CouchService(_repository.Object, _mapperMoq.Object);
             var id = 1;
             var deleteResult = true;
             _repository.Setup(r => r.Delete(It.IsAny<int>())).ReturnsAsync(deleteResult);
 
             //Act
-            var result = await couchService.Delete(id);
+            var result = await _couchService.Delete(id);
 
             //Assert
             result.ShouldBeTrue();
@@ -156,13 +149,12 @@ namespace GYM.BLL.Tests.Services
         public async Task Delete_InputInvalidId_ReturnsFalse()
         {
             //Arrange
-            var couchService = new CouchService(_repository.Object, _mapperMoq.Object);
             var id = 1;
             var deleteResult = false;
             _repository.Setup(r => r.Delete(It.IsAny<int>())).ReturnsAsync(deleteResult);
 
             //Act
-            var result = await couchService.Delete(id);
+            var result = await _couchService.Delete(id);
 
             //Assert
             result.ShouldBeFalse();
