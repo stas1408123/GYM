@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using GYM.BLL.Abstractions;
 using GYM.BLL.Models;
 using GYM.BLL.Services;
 using GYM.BLL.Tests.TestData;
@@ -13,26 +12,25 @@ namespace GYM.BLL.Tests.Services
 {
     public class OrderServiceTests
     {
-        private readonly IGenericService<OrderModel> _orderService;
         private readonly Mock<IMapper> _mapperMoq;
         private readonly Mock<IRepository<OrderEntity>> _repository;
         public OrderServiceTests()
         {
             _mapperMoq = new Mock<IMapper>();
             _repository = new Mock<IRepository<OrderEntity>>();
-            _orderService = new Mock<OrderService>(_repository.Object, _mapperMoq.Object).Object;
         }
 
         [Fact]
-        public async Task GetALL_CheckCostGreaterZero_ReturnsOrderModels()
+        public async Task GetALL_ReturnsOrderModels()
         {
             //Arrange
+            var orderService = new OrderService(_repository.Object, _mapperMoq.Object);
             _repository.Setup(cr => cr.GetAll()).ReturnsAsync(TestEntities.GetOrderEntitiesForTest());
 
             _mapperMoq.Setup(m => m.Map<IEnumerable<OrderEntity>, IEnumerable<OrderModel>>(It.IsAny<IEnumerable<OrderEntity>>())).Returns(TestModels.GetOrderModelsForTest());
 
             //Act
-            var resultOrdersModel = await _orderService.GetAll();
+            var resultOrdersModel = await orderService.GetAll();
 
 
             //Assert
@@ -44,15 +42,16 @@ namespace GYM.BLL.Tests.Services
         [InlineData(2)]
         [InlineData(3)]
         [InlineData(4)]
-        public async Task Get_InputValidIdCheckType_ReturnsOrderModel(int id)
+        public async Task Get_InputValidId_ReturnsOrderModel(int id)
         {
             //Arrange
+            var orderService = new OrderService(_repository.Object, _mapperMoq.Object);
             _repository.Setup(cr => cr.Get(It.IsAny<int>())).ReturnsAsync(TestEntities.GetOrderEntitiesForTest().FirstOrDefault(ce => ce.Id == id));
 
             _mapperMoq.Setup(m => m.Map<OrderModel>(It.IsAny<OrderEntity>())).Returns(TestModels.GetOrderModelsForTest().FirstOrDefault(cm => cm.Id == id)!);
 
             //Act
-            var orderModelResult = await _orderService.Get(id);
+            var orderModelResult = await orderService.Get(id);
 
             //Assert
             orderModelResult.ShouldBeOfType(typeof(OrderModel));
@@ -61,15 +60,16 @@ namespace GYM.BLL.Tests.Services
         [Theory]
         [InlineData(0)]
         [InlineData(5)]
-        public async Task Get_InputInvalidIdCheckNull_ReturnsNull(int id)
+        public async Task Get_InputInvalidId_ReturnsNull(int id)
         {
             //Arrange
+            var orderService = new OrderService(_repository.Object, _mapperMoq.Object);
             _repository.Setup(cr => cr.Get(It.IsAny<int>())).ReturnsAsync(TestEntities.GetOrderEntitiesForTest().FirstOrDefault(ce => ce.Id == id));
 
             _mapperMoq.Setup(m => m.Map<OrderModel>(It.IsAny<OrderEntity>())).Returns(TestModels.GetOrderModelsForTest().FirstOrDefault(cm => cm.Id == id)!);
 
             //Act
-            var orderModelResult = await _orderService.Get(id);
+            var orderModelResult = await orderService.Get(id);
 
             //Assert
             orderModelResult.ShouldBeNull();
@@ -80,9 +80,10 @@ namespace GYM.BLL.Tests.Services
         [InlineData("Full-body program #2")]
         [InlineData("Cross-fit #5")]
         [InlineData("Full-body program #7")]
-        public async Task Get_InputPredicateCheckTitle_ReturnsVisitorModels(string expectedTitle)
+        public async Task Get_InputPredicate_ReturnsVisitorModels(string expectedTitle)
         {
             //Arrange
+            var orderService = new OrderService(_repository.Object, _mapperMoq.Object);
             Expression<Func<OrderEntity, bool>> entityPredicate = (pe) => pe.Title == expectedTitle;
             Expression<Func<OrderModel, bool>> modelPredicate = (mp) => mp.Title == expectedTitle;
 
@@ -98,41 +99,37 @@ namespace GYM.BLL.Tests.Services
             _mapperMoq.Setup(m => m.Map<IEnumerable<OrderEntity>, IEnumerable<OrderModel>>(It.IsAny<IEnumerable<OrderEntity>>())).Returns(TestModels.GetOrderModelsForTest().Where(ce => ce.Title == expectedTitle));
 
             //Act
-            var orderModelsResult = await _orderService.Get(modelPredicate);
+            var orderModelsResult = await orderService.Get(modelPredicate);
 
             //Assert
             orderModelsResult.ShouldContain(vm => vm.Title == expectedTitle);
         }
 
-        [Fact]
-        public async Task Create_InputOrderModelSaveOrderEntity_VerifyInvokeCreate()
+        [Theory]
+        [AutoDomainData]
+        public async Task Create_InputOrderModel_VerifyInvokeCreate(OrderEntity orderEntity, OrderModel orderModel)
         {
             //Arrange
-            var id = 1;
-            var orderEntity = TestEntities.GetOrderEntitiesForTest().FirstOrDefault(e => e.Id == id)!;
-            var orderModel = TestModels.GetOrderModelsForTest().FirstOrDefault(e => e.Id == id)!;
-
+            var orderService = new OrderService(_repository.Object, _mapperMoq.Object);
             _mapperMoq.Setup(m => m.Map<OrderEntity>(It.IsAny<OrderModel>())).Returns(orderEntity);
 
             //Act
-            await _orderService.Create(orderModel);
+            await orderService.Create(orderModel);
 
             //Assert
             _repository.Verify(p => p.Create(It.IsAny<OrderEntity>()), Times.Once);
         }
 
-        [Fact]
-        public async Task Update_InputOrderModelUpdateOrderEntity_VerifyInvokeUpdate()
+        [Theory]
+        [AutoDomainData]
+        public async Task Update_InputOrderModel_VerifyInvokeUpdate(OrderEntity orderEntity, OrderModel orderModel)
         {
             //Arrange
-            var id = 1;
-            var orderEntity = TestEntities.GetOrderEntitiesForTest().FirstOrDefault(e => e.Id == id)!;
-            var orderModel = TestModels.GetOrderModelsForTest().FirstOrDefault(e => e.Id == id)!;
-
+            var orderService = new OrderService(_repository.Object, _mapperMoq.Object);
             _mapperMoq.Setup(m => m.Map<OrderEntity>(It.IsAny<OrderModel>())).Returns(orderEntity);
 
             //Act
-            await _orderService.Update(orderModel);
+            await orderService.Update(orderModel);
 
             //Assert
             _repository.Verify(p => p.Update(It.IsAny<OrderEntity>()), Times.Once);
@@ -142,13 +139,13 @@ namespace GYM.BLL.Tests.Services
         public async Task Delete_InputValidId_ReturnsTrue()
         {
             //Arrange
+            var orderService = new OrderService(_repository.Object, _mapperMoq.Object);
             var id = 1;
             var deleteResult = true;
-
             _repository.Setup(r => r.Delete(It.IsAny<int>())).ReturnsAsync(deleteResult);
 
             //Act
-            var result = await _orderService.Delete(id);
+            var result = await orderService.Delete(id);
 
             //Assert
             result.ShouldBeTrue();
@@ -159,13 +156,13 @@ namespace GYM.BLL.Tests.Services
         public async Task Delete_InputInvalidId_ReturnsFalse()
         {
             //Arrange
+            var orderService = new OrderService(_repository.Object, _mapperMoq.Object);
             var id = 4;
             var deleteResult = false;
-
             _repository.Setup(r => r.Delete(It.IsAny<int>())).ReturnsAsync(deleteResult);
 
             //Act
-            var result = await _orderService.Delete(id);
+            var result = await orderService.Delete(id);
 
             //Assert
             result.ShouldBeFalse();
