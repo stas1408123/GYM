@@ -25,7 +25,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("DefaultPolicy");
+app.UseCors(CustomCors.DEFAULT_CORS_POLICY);
 
 app.UseMiddleware<CustomExceptionHandler>();
 
