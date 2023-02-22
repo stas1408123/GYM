@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
 // Add services to the container.
 builder.Services.AddCustomCors();
 builder.Services.AddDependenciesApi(configuration);
@@ -18,6 +19,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+var logger = app.Logger;
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -27,7 +29,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(CustomCors.DefaultCorsPolicy);
 
-app.UseMiddleware<CustomExceptionHandler>();
+app.UseMiddleware<CustomExceptionHandler>(logger);
 
 app.UseHttpsRedirection();
 
@@ -36,3 +38,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+#pragma warning disable S1118
+public partial class Program { }
+#pragma warning restore S1118

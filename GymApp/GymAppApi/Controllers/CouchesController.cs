@@ -58,7 +58,7 @@ namespace GYM.API.Controllers
 
         // POST: api/Couches
         [HttpPost]
-        public async Task<ActionResult<CouchViewModel>> PostCouch(CouchViewModel couchViewModel)
+        public async Task<IActionResult> PostCouch(CouchViewModel couchViewModel)
         {
             await _validator.ValidateAndThrowAsync(couchViewModel);
             var couchModel = _mapper.Map<CouchModel>(couchViewModel);
