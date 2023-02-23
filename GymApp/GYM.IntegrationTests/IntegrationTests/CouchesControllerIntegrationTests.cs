@@ -46,7 +46,7 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             //Arrange
             await InitializeDb();
             var couch = _dbContext.CouchEntities.LastOrDefault()!;
-            string route = "api/Couches/" + couch.Id;
+            string route = RouteWithId + couch.Id;
 
             //Act
             var response = await _client.GetAsync(route);
@@ -77,9 +77,7 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         {
             //Arrange
             await InitializeDb();
-
-            var couchViewModel = _fixture.Build<CouchViewModel>().Without(p => p.Id).With(p => p.Visitors, new List<VisitorViewModel>()).Create();
-
+            var couchViewModel = GetCouchViewModelForTest();
             var couch = _dbContext.CouchEntities.LastOrDefault();
             string route = RouteWithId + (couch!.Id);
             JsonContent content = JsonContent.Create(couchViewModel);
@@ -94,13 +92,11 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         }
 
         [Fact]
-        public async Task PostCouch_InputCouchViewModel_ReturnsOk()
+        public async Task PostCouch_InputCouchViewModel_ReturnsOkAndAddedCouchViewModel()
         {
             //Arrange
             await InitializeDb();
-
-            var couchViewModel = _fixture.Build<CouchViewModel>().Without(p => p.Id).With(p => p.Visitors, new List<VisitorViewModel>()).Create();
-
+            var couchViewModel = GetCouchViewModelForTest();
             JsonContent content = JsonContent.Create(couchViewModel);
 
             //Act
@@ -118,15 +114,16 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         {
             //Arrange
             await InitializeDb();
-
             var couchEntity = _dbContext.CouchEntities.LastOrDefault();
             string route = RouteWithId + couchEntity!.Id;
 
             //Act
             var response = await _client.DeleteAsync(route);
+            var resultLastCouchEntity = _dbContext.CouchEntities.LastOrDefault()!;
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+            resultLastCouchEntity.Id.ShouldNotBe(couchEntity.Id);
         }
 
         [Fact]
@@ -145,6 +142,7 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         }
 
+        //Test data
         //initialize Db
         private async Task InitializeDb()
         {
@@ -152,6 +150,12 @@ namespace GYM.API.IntegrationTests.IntegrationTests
 
             _dbContext.CouchEntities.AddRange(couches);
             await _dbContext.SaveChangesAsync();
+        }
+
+        //Get random couch
+        private CouchViewModel GetCouchViewModelForTest()
+        {
+            return _fixture.Build<CouchViewModel>().Without(p => p.Id).With(p => p.Visitors, new List<VisitorViewModel>()).Create();
         }
     }
 }
