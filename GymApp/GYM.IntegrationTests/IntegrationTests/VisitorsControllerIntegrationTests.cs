@@ -1,92 +1,63 @@
 ﻿using AutoFixture;
 using GYM.API.Models;
-using GYM.DAL.EF;
 using GYM.DAL.Entities;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System.Net;
 using System.Net.Http.Json;
 
 namespace GYM.API.IntegrationTests.IntegrationTests
 {
-    public class VisitorsControllerIntegrationTests
+    public class VisitorsControllerIntegrationTests : IntegrationTestsBase
     {
-        private readonly HttpClient _client;
-        private readonly GymAppDbContext _dbContext;
-        private readonly Fixture _fixture;
         private const string RouteWithoutId = "api/Visitors";
         private const string RouteWithId = "api/Visitors/";
 
         public VisitorsControllerIntegrationTests()
         {
-            _fixture = new Fixture();
-
-            var webHost = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    var dbContextDescriptor = services.SingleOrDefault(d =>
-                        d.ServiceType == typeof(DbContextOptions<GymAppDbContext>));
-
-                    services.Remove(dbContextDescriptor!);
-
-                    services.AddDbContext<GymAppDbContext>(options =>
-                    {
-                        options.UseInMemoryDatabase("InMemoryGymAppTest");
-                    });
-
-                });
-            });
-
-            _client = webHost.CreateClient();
-            _dbContext = webHost.Services.CreateScope().ServiceProvider.GetService<GymAppDbContext>()!;
-            _dbContext.VisitorEntities.AddRange(GetVisitorEntitiesForTests());
-            _dbContext.SaveChanges();
+            DbContextForTests.VisitorEntities.AddRange(GetVisitorEntitiesForTests());
+            DbContextForTests.SaveChanges();
         }
 
         [Fact]
         public async Task GetVisitors_HasNotData_ReturnsStatusOkAndAllVisitors()
         {
             //Arrange
-            var visitorEntity = _dbContext.VisitorEntities.LastOrDefault();
+            var visitorEntity = DbContextForTests.VisitorEntities.LastOrDefault();
 
             //Act
-            var response = await _client.GetAsync(RouteWithoutId);
-            var responseString = await response.Content.ReadAsStringAsync();
+            var response = await ClientForTests.GetAsync(RouteWithoutId);
+            var result = await response.Content.ReadFromJsonAsync<IEnumerable<VisitorViewModel>>();
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            responseString.ShouldContain(visitorEntity!.FirstName);
+            result!.LastOrDefault()!.FirstName.ShouldBe(visitorEntity!.FirstName);
         }
 
         [Fact]
         public async Task GetVisitor_InputValidId_ReturnsStatusOkAndVisitor()
         {
             //Arrange
-            var visitorEntity = _dbContext.VisitorEntities.LastOrDefault()!;
+            var visitorEntity = DbContextForTests.VisitorEntities.LastOrDefault()!;
             string route = RouteWithId + visitorEntity.Id;
 
             //Act
-            var response = await _client.GetAsync(route);
-            var responseString = await response.Content.ReadAsStringAsync();
+            var response = await ClientForTests.GetAsync(route);
+            var result = await response.Content.ReadFromJsonAsync<VisitorViewModel>();
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            responseString.ShouldContain(visitorEntity.FirstName);
+            result!.FirstName.ShouldBe(visitorEntity.FirstName);
         }
 
         [Fact]
         public async Task GetVisitor_InputInValidId_ReturnsStatusNotFound()
         {
             //Arrange
-            var visitorEntity = _dbContext.VisitorEntities.LastOrDefault()!;
+            var visitorEntity = DbContextForTests.VisitorEntities.LastOrDefault()!;
             string route = RouteWithId + (visitorEntity.Id + 1);
 
             //Act
-            var response = await _client.GetAsync(route);
+            var response = await ClientForTests.GetAsync(route);
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
@@ -97,17 +68,17 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         public async Task PutVisitor_InputVisitorViewModel_ReturnsOkAndChangedVisitorViewModel(VisitorViewModel visitorViewModel)
         {
             //Arrange
-            var visitorEntity = _dbContext.VisitorEntities.LastOrDefault();
+            var visitorEntity = DbContextForTests.VisitorEntities.LastOrDefault();
             string route = RouteWithId + (visitorEntity!.Id);
             JsonContent content = JsonContent.Create(visitorViewModel);
 
             //Act
-            var response = await _client.PutAsync(route, content);
-            var responseString = await response.Content.ReadAsStringAsync();
+            var response = await ClientForTests.PutAsync(route, content);
+            var result = await response.Content.ReadFromJsonAsync<VisitorViewModel>();
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            responseString.ShouldContain(visitorViewModel.FirstName);
+            result!.FirstName.ShouldBe(visitorViewModel.FirstName);
         }
 
         [Theory, AutoDomainData]
@@ -117,24 +88,24 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             JsonContent content = JsonContent.Create(visitorViewModel);
 
             //Act
-            var response = await _client.PostAsync(RouteWithoutId, content);
-            var responseString = await response.Content.ReadAsStringAsync();
-            var visitorEntity = _dbContext.VisitorEntities.LastOrDefault();
+            var response = await ClientForTests.PostAsync(RouteWithoutId, content);
+            var result = await response.Content.ReadFromJsonAsync<VisitorViewModel>();
+            var visitorEntity = DbContextForTests.VisitorEntities.LastOrDefault();
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            responseString.ShouldContain(visitorEntity!.FirstName);
+            result!.FirstName.ShouldBe(visitorEntity!.FirstName);
         }
 
         [Fact]
         public async Task DeleteVisitor_InputValidId_ReturnsNoContent()
         {
             //Arrange
-            var visitorEntity = _dbContext.VisitorEntities.FirstOrDefault();
+            var visitorEntity = DbContextForTests.VisitorEntities.FirstOrDefault();
             string route = RouteWithId + visitorEntity!.Id;
 
             //Act
-            var response = await _client.DeleteAsync(route);
+            var response = await ClientForTests.DeleteAsync(route);
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -144,11 +115,11 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         public async Task DeleteCouch_InputInValidId_ReturnsNotFound()
         {
             //Arrange
-            var visitorEntity = _dbContext.VisitorEntities.LastOrDefault();
+            var visitorEntity = DbContextForTests.VisitorEntities.LastOrDefault();
             string route = RouteWithId + (visitorEntity!.Id + 5);
 
             //Act
-            var response = await _client.DeleteAsync(route);
+            var response = await ClientForTests.DeleteAsync(route);
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
@@ -157,7 +128,7 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         //Test data
         private IEnumerable<VisitorEntity> GetVisitorEntitiesForTests()
         {
-            return _fixture.Build<VisitorEntity>()
+            return FixtureForTests.Build<VisitorEntity>()
                   .Without(p => p.Id)
                   .With(p => p.Orders, new List<OrderEntity>())
                   .With(p => p.Couches, new List<CouchEntity>())
