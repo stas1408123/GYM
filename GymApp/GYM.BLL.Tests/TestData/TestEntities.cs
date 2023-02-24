@@ -17,14 +17,16 @@ namespace GYM.BLL.Tests.TestData
                     Visitors = new List<VisitorEntity>(),
                 },
                 new CouchEntity()
-                { Id = 2,
+                { 
+                    Id = 2,
                     FirstName = "Mick",
                     LastName = "Smith",
                     Description = "Fitness, Cross-fit",
                     Visitors = new List<VisitorEntity>()
                 },
                 new CouchEntity()
-                { Id = 3,
+                { 
+                    Id = 3,
                     FirstName = "Olivia",
                     LastName = "Johnson",
                     Description = "Cross-fit, Triathlon",

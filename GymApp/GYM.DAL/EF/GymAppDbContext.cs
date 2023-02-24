@@ -12,28 +12,5 @@ namespace GYM.DAL.EF
         public GymAppDbContext(DbContextOptions<GymAppDbContext> options) : base(options)
         {
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<CouchEntity>().HasData(
-                new []{
-                    new CouchEntity
-                    {
-                        Id = 1,
-                        FirstName = "Mark",
-                        LastName = "Walberg",
-                        Description = "dsfasdfdv",
-                        Visitors = new List<VisitorEntity>(),
-                    },
-                    new CouchEntity 
-                    { 
-                        Id = 2,
-                        FirstName = "Nick",
-                        LastName = "Walberg",
-                        Description = "dsfasdfdv",
-                        Visitors = new List<VisitorEntity>(),
-                    }
-                });
-        }
     }
 }
