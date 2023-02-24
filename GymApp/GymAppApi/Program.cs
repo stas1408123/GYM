@@ -25,9 +25,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+var logger = app.Logger;
+
 app.UseCors(CustomCors.DefaultCorsPolicy);
 
-app.UseMiddleware<CustomExceptionHandler>();
+app.UseMiddleware<CustomExceptionHandler>(logger);
 
 app.UseHttpsRedirection();
 
@@ -36,3 +38,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+#pragma warning disable S1118
+public partial class Program { }
+#pragma warning restore S1118
