@@ -20,10 +20,7 @@ namespace GYM.API.IntegrationTests
 
                 return fixture;
             })
-
         {
-
         }
-
     }
 }
