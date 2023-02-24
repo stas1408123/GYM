@@ -10,7 +10,7 @@ namespace GYM.API.Mapping
         {
             CreateMap<CouchViewModel, CouchModel>().ReverseMap();
 
-            CreateMap<OrderViewModel, OrderViewModel>().ReverseMap();
+            CreateMap<OrderViewModel, OrderModel>().ReverseMap();
 
             CreateMap<VisitorViewModel, VisitorModel>().ReverseMap();
         }

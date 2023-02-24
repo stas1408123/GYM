@@ -31,7 +31,9 @@ namespace GYM.DAL.Repositories
 
         public async Task Create(TEntity item)
         {
+            // _context.Entry(item).State = EntityState.Added;
             _dbSet.Add(item);
+
             await _context.SaveChangesAsync();
         }
 
