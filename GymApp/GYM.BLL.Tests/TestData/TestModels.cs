@@ -13,7 +13,7 @@ namespace GYM.BLL.Tests.TestData
                     Id = 1,
                     FirstName = "Arnold",
                     LastName = "Schwarzenegger",
-                    Describe = "Fitness, Bodybuilding",
+                    Description = "Fitness, Bodybuilding",
                     Visitors = null,
                 },
                 new CouchModel()
@@ -21,7 +21,7 @@ namespace GYM.BLL.Tests.TestData
                     Id = 2,
                     FirstName = "Mick",
                     LastName = "Smith",
-                    Describe = "Fitness, Cross-fit",
+                    Description = "Fitness, Cross-fit",
                     Visitors = null
                 },
                 new CouchModel()
@@ -29,7 +29,7 @@ namespace GYM.BLL.Tests.TestData
                     Id = 3,
                     FirstName = "Olivia",
                     LastName = "Johnson",
-                    Describe = "Cross-fit, Triathlon",
+                    Description = "Cross-fit, Triathlon",
                     Visitors = null
                 },
             };

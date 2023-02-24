@@ -40,7 +40,7 @@ namespace GYM.API.Controllers
                 return NotFound();
             }
 
-            return Ok(orderModel);
+            return Ok(_mapper.Map<OrderViewModel>(orderModel));
         }
 
         // PUT: api/Orders/5
