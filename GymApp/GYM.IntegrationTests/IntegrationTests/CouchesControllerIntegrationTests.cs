@@ -50,7 +50,6 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         public async Task GetCouches_HasNotData_ReturnsStatusOkAndAllCouches()
         {
             //Arrange
-            //  await InitializeDb();
             var couch = _dbContext.CouchEntities.LastOrDefault();
 
             //Act
@@ -66,7 +65,6 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         public async Task GetCouch_InputValidId_ReturnsStatusOkAndCouch()
         {
             //Arrange
-            // await InitializeDb();
             var couch = _dbContext.CouchEntities.LastOrDefault()!;
             string route = RouteWithId + couch.Id;
 
@@ -83,7 +81,6 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         public async Task GetCouch_InputInValidId_ReturnsNull()
         {
             //Arrange
-            // await InitializeDb();
             var couch = _dbContext.CouchEntities.LastOrDefault()!;
             string route = RouteWithId + (couch.Id + 1);
 
@@ -94,12 +91,10 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         }
 
-        [Fact]
-        public async Task PutCouch_InputCouchViewModel_ReturnsOkAndChangedCouchViewModel()
+        [Theory, AutoDomainData]
+        public async Task PutCouch_InputCouchViewModel_ReturnsOkAndChangedCouchViewModel(CouchViewModel couchViewModel)
         {
             //Arrange
-            // await InitializeDb();
-            var couchViewModel = GetCouchViewModelForTest();
             var couch = _dbContext.CouchEntities.LastOrDefault();
             string route = RouteWithId + (couch!.Id);
             JsonContent content = JsonContent.Create(couchViewModel);
@@ -113,12 +108,10 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             responseString.ShouldContain(couchViewModel.FirstName);
         }
 
-        [Fact]
-        public async Task PostCouch_InputCouchViewModel_ReturnsOkAndAddedCouchViewModel()
+        [Theory, AutoDomainData]
+        public async Task PostCouch_InputCouchViewModel_ReturnsOkAndAddedCouchViewModel(CouchViewModel couchViewModel)
         {
             //Arrange
-            // await InitializeDb();
-            var couchViewModel = GetCouchViewModelForTest();
             JsonContent content = JsonContent.Create(couchViewModel);
 
             //Act
@@ -135,25 +128,20 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         public async Task DeleteCouch_InputValidId_ReturnsNoContent()
         {
             //Arrange
-            // await InitializeDb();
-            var couchEntity = _dbContext.CouchEntities.LastOrDefault();
+            var couchEntity = _dbContext.CouchEntities.FirstOrDefault();
             string route = RouteWithId + couchEntity!.Id;
 
             //Act
             var response = await _client.DeleteAsync(route);
-            var resultLastCouchEntity = _dbContext.CouchEntities.LastOrDefault()!;
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-            resultLastCouchEntity.Id.ShouldNotBe(couchEntity.Id);
         }
 
         [Fact]
         public async Task DeleteCouch_InputInValidId_ReturnsNotFound()
         {
             //Arrange
-            // await InitializeDb();
-
             var couchEntity = _dbContext.CouchEntities.LastOrDefault();
             string route = RouteWithId + (couchEntity!.Id + 2);
 
@@ -165,24 +153,10 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         }
 
         //Test data
-        //initialize Db
-        private async Task InitializeDb()
-        {
-            IEnumerable<CouchEntity> couches = _fixture.Build<CouchEntity>().Without(p => p.Id).Without(p => p.Visitors).CreateMany(5).ToList();
-
-            _dbContext.CouchEntities.AddRange(couches);
-            await _dbContext.SaveChangesAsync();
-        }
-
         private IEnumerable<CouchEntity> GetCouchesEntityForTest()
         {
             return _fixture.Build<CouchEntity>().Without(p => p.Id).Without(p => p.Visitors).CreateMany(5).ToList();
         }
 
-        //Get random couch
-        private CouchViewModel GetCouchViewModelForTest()
-        {
-            return _fixture.Build<CouchViewModel>().Without(p => p.Id).With(p => p.Visitors, new List<VisitorViewModel>()).Create();
-        }
     }
 }

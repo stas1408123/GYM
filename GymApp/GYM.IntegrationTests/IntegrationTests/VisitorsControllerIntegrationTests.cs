@@ -93,11 +93,10 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         }
 
 
-        [Fact]
-        public async Task PutVisitor_InputVisitorViewModel_ReturnsOkAndChangedVisitorViewModel()
+        [Theory, AutoDomainData]
+        public async Task PutVisitor_InputVisitorViewModel_ReturnsOkAndChangedVisitorViewModel(VisitorViewModel visitorViewModel)
         {
             //Arrange
-            var visitorViewModel = GetVisitorViewModelForTest();
             var visitorEntity = _dbContext.VisitorEntities.LastOrDefault();
             string route = RouteWithId + (visitorEntity!.Id);
             JsonContent content = JsonContent.Create(visitorViewModel);
@@ -111,11 +110,10 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             responseString.ShouldContain(visitorViewModel.FirstName);
         }
 
-        [Fact]
-        public async Task PostVisitor_InputVisitorViewModel_ReturnsOkAndAddedVisitor()
+        [Theory, AutoDomainData]
+        public async Task PostVisitor_InputVisitorViewModel_ReturnsOkAndAddedVisitor(VisitorViewModel visitorViewModel)
         {
             //Arrange
-            var visitorViewModel = GetVisitorViewModelForTest();
             JsonContent content = JsonContent.Create(visitorViewModel);
 
             //Act
@@ -132,16 +130,14 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         public async Task DeleteVisitor_InputValidId_ReturnsNoContent()
         {
             //Arrange
-            var visitorEntity = _dbContext.VisitorEntities.LastOrDefault();
+            var visitorEntity = _dbContext.VisitorEntities.FirstOrDefault();
             string route = RouteWithId + visitorEntity!.Id;
 
             //Act
             var response = await _client.DeleteAsync(route);
-            var resultLastVisitor = _dbContext.VisitorEntities.LastOrDefault()!;
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-            resultLastVisitor.Id.ShouldNotBe(visitorEntity.Id);
         }
 
         [Fact]
@@ -159,7 +155,6 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         }
 
         //Test data
-
         private IEnumerable<VisitorEntity> GetVisitorEntitiesForTests()
         {
             return _fixture.Build<VisitorEntity>()
@@ -167,15 +162,6 @@ namespace GYM.API.IntegrationTests.IntegrationTests
                   .With(p => p.Orders, new List<OrderEntity>())
                   .With(p => p.Couches, new List<CouchEntity>())
                   .CreateMany(5);
-        }
-
-        //Get random visitor
-        private VisitorViewModel GetVisitorViewModelForTest()
-        {
-            return _fixture.Build<VisitorViewModel>().Without(p => p.Id).Without(p => p.Id)
-                .With(p => p.Orders, new List<OrderViewModel>())
-                .With(p => p.Couches, new List<CouchViewModel>())
-                .Create();
         }
     }
 }

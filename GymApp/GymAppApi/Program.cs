@@ -27,8 +27,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var logger = app.Logger;
-
 app.UseCors(CustomCors.DefaultCorsPolicy);
 
 app.UseMiddleware<CustomExceptionHandler>(logger);

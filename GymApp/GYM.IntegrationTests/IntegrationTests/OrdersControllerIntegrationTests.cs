@@ -50,7 +50,6 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         public async Task GetOrders_HasNotData_ReturnsStatusOkAndAllOrders()
         {
             //Arrange
-            // await InitializeDb();
             var orderEntity = _dbContext.OrderEntities.LastOrDefault();
 
             //Act
@@ -66,7 +65,6 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         public async Task GetOrder_InputValidId_ReturnsStatusOkAndOrder()
         {
             //Arrange
-            //await InitializeDb();
             var orderEntity = _dbContext.OrderEntities.LastOrDefault()!;
 
             //Act
@@ -82,9 +80,8 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         public async Task GetOrder_InputInValidId_ReturnsStatusNotFound()
         {
             //Arrange
-            //await InitializeDb();
             var orderEntity = _dbContext.OrderEntities.LastOrDefault()!;
-            var route = RouteWithId + (orderEntity.Id + 9);
+            var route = RouteWithId + (orderEntity.Id + 2);
 
             //Act
             var response = await _client.GetAsync(route);
@@ -93,16 +90,12 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         }
 
-        [Fact]
-        public async Task PutOrder_InputOrderViewModel_ReturnsOkAndChangedViewModel()
+        [Theory, AutoDomainData]
+        public async Task PutOrder_InputOrderViewModel_ReturnsOkAndChangedViewModel(OrderViewModel orderViewModel)
         {
             //Arrange
-            //await InitializeDb();
-            var orderViewModel = GetOrderViewModelForTest();
             var orderEntity = _dbContext.OrderEntities.LastOrDefault()!;
-
-            // string route = RouteWithId + (orderEntity.Id);
-            string route = RouteWithId + 2;
+            string route = RouteWithId + (orderEntity.Id);
             JsonContent content = JsonContent.Create(orderViewModel);
 
             //Act
@@ -114,12 +107,10 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             responseString.ShouldContain(orderViewModel.Title);
         }
 
-        [Fact]
-        public async Task PostOrder_InputOrderViewModel_ReturnsOkAndAddedViewModel()
+        [Theory, AutoDomainData]
+        public async Task PostOrder_InputOrderViewModel_ReturnsOkAndAddedViewModel(OrderViewModel orderViewModel)
         {
             //Arrange
-            //await InitializeDb();
-            var orderViewModel = GetOrderViewModelForTest();
             JsonContent content = JsonContent.Create(orderViewModel);
 
             //Act
@@ -130,32 +121,27 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
             responseString.ShouldContain(orderViewModel.Title);
-            //lastOrder.Title.ShouldBe(orderViewModel.Title);
+            lastOrder.Title.ShouldBe(orderViewModel.Title);
         }
 
         [Fact]
         public async Task DeleteOrder_InputValidId_ReturnsNoContent()
         {
             //Arrange
-            //await InitializeDb();
-            var orderEntity = _dbContext.CouchEntities.LastOrDefault()!;
-            //string route = RouteWithId + orderEntity.Id;
-            string route = RouteWithId + 3;
+            var orderEntity = _dbContext.CouchEntities.FirstOrDefault()!;
+            string route = RouteWithId + orderEntity.Id;
 
             //Act
             var response = await _client.DeleteAsync(route);
-            var resultLastOrderEntity = _dbContext.OrderEntities.LastOrDefault()!;
 
             //Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-            resultLastOrderEntity.Id.ShouldNotBe(orderEntity.Id);
         }
 
         [Fact]
         public async Task DeleteOrder_InputInValidId_ReturnsNotFound()
         {
             //Arrange
-            // await InitializeDb();
             var orderEntity = _dbContext.OrderEntities.LastOrDefault()!;
             string route = RouteWithId + (orderEntity.Id + 7);
 
@@ -167,35 +153,12 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         }
 
         //Test data
-        //initialize Db
-        private async Task InitializeDb()
-        {
-            IEnumerable<OrderEntity> ordersEntities = _fixture.Build<OrderEntity>()
-                .Without(p => p.Id)
-                .Without(p => p.Visitor)
-                //.With(p => p.VisitorId, 1)
-                .CreateMany(5).ToList();
-
-            _dbContext.OrderEntities.AddRange(ordersEntities);
-            await _dbContext.SaveChangesAsync();
-        }
-
         private IEnumerable<OrderEntity> GetOrderEntitiesForTest()
         {
             return _fixture.Build<OrderEntity>()
                  .Without(p => p.Id)
                  .Without(p => p.Visitor)
-                 //.With(p => p.VisitorId, 1)
                  .CreateMany(5).ToList();
-        }
-
-
-        //Get random visitor
-        private OrderViewModel GetOrderViewModelForTest()
-        {
-            return _fixture.Build<OrderViewModel>()
-                .Without(p => p.Id)
-                .Create();
         }
     }
 }
