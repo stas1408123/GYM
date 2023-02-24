@@ -16,7 +16,7 @@ namespace GYM.DAL.EF
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CouchEntity>().HasData(
-                new[]{
+                new []{
                     new CouchEntity
                     {
                         Id = 1,
@@ -24,14 +24,14 @@ namespace GYM.DAL.EF
                         LastName = "Walberg",
                         Description = "dsfasdfdv",
                         Visitors = new List<VisitorEntity>(),
-
                     },
-                    new CouchEntity { Id = 2,
+                    new CouchEntity 
+                    { 
+                        Id = 2,
                         FirstName = "Nick",
                         LastName = "Walberg",
                         Description = "dsfasdfdv",
                         Visitors = new List<VisitorEntity>(),
-
                     }
                 });
         }
