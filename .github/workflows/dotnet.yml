@@ -4,7 +4,7 @@
 name: .NET
 env:
   SOLUTION_PATH       : GymApp/
-  IDENTITY_SERVER_PATH: IdentityServer
+  IDENTITY_SERVER_PATH: IdentityServer/
   
 on:
   push:
