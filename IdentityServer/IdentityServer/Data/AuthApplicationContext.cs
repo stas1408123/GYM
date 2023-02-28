@@ -9,7 +9,6 @@ namespace IdentityServer.Data
         public AuthApplicationContext(DbContextOptions<AuthApplicationContext> options)
             : base(options)
         {
-
         }
     }
 }
