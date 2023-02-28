@@ -1,7 +1,14 @@
+using IdentityServer;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddIdentityServer();
+builder.Services.AddIdentityServer()
+    .AddInMemoryIdentityResources(Config.GetResources)       //This is for dev only scenarios when you don’t have a certificate to use.
+    .AddInMemoryApiScopes(Config.ApiScopes)
+    .AddInMemoryClients(Config.Clients)
+    .AddInMemoryApiResources(Config.GetApiResorces)
+    .AddDeveloperSigningCredential();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -18,6 +25,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
 app.MapControllers();
+app.UseIdentityServer();
 
 app.Run();
