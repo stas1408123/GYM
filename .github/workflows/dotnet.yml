@@ -3,7 +3,8 @@
 
 name: .NET
 env:
-  SOLUTION_PATH : GymApp/
+  SOLUTION_PATH       : GymApp/
+  IDENTITY_SERVER_PATH: IdentityServer/
   
 on:
   push:
@@ -22,9 +23,14 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
+    - name: Restore GymApp dependencies
       run: dotnet restore ${{ env.SOLUTION_PATH }}
-    - name: Build
+    - name: Restore Identity Server dependencies
+      run: dotnet restore ${{ env.IDENTITY_SERVER_PATH }}
+  
+    - name: Build GymApp
       run: dotnet build --no-restore ${{ env.SOLUTION_PATH }} 
     - name: Test
       run:  dotnet test --no-build --verbosity normal ${{ env.SOLUTION_PATH }} 
+    - name: Build Identity Server
+      run: dotnet build --no-restore ${{ env.IDENTITY_SERVER_PATH }} 
