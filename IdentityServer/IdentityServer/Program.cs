@@ -40,6 +40,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+SeedData.InitializeDatabase(app);
+SeedData.EnsurePopulated(app);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
