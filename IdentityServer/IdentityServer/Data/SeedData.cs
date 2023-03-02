@@ -58,10 +58,10 @@ namespace IdentityServer.Data
             }
 
             // Add Alice
-            var usrMng = app.ApplicationServices.CreateScope().ServiceProvider
+            var userManager = app.ApplicationServices.CreateScope().ServiceProvider
                 .GetService<UserManager<ApplicationUser>>()!;
 
-            var alice = usrMng.FindByNameAsync("alice").Result;
+            var alice = userManager.FindByNameAsync("alice").Result;
             if (alice == null)
             {
 
@@ -72,14 +72,14 @@ namespace IdentityServer.Data
                     EmailConfirmed = true,
                 };
 
-                var result = usrMng.CreateAsync(alice, "Pass123$").Result;
+                var result = userManager.CreateAsync(alice, "Pass123$").Result;
 
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                result = usrMng.AddClaimsAsync(alice, new Claim[]{
+                result = userManager.AddClaimsAsync(alice, new Claim[]{
                                     new (JwtClaimTypes.Name, "Alice Smith"),
                                     new (JwtClaimTypes.GivenName, "Alice"),
                                     new (JwtClaimTypes.FamilyName, "Smith"),
@@ -92,7 +92,7 @@ namespace IdentityServer.Data
             }
 
             // Add Bob
-            var bob = usrMng.FindByNameAsync("bob").Result;
+            var bob = userManager.FindByNameAsync("bob").Result;
             if (bob == null)
             {
                 bob = new ApplicationUser
@@ -101,13 +101,13 @@ namespace IdentityServer.Data
                     Email = "BobSmith@email.com",
                     EmailConfirmed = true
                 };
-                var result = usrMng.CreateAsync(bob, "Pass123$").Result;
+                var result = userManager.CreateAsync(bob, "Pass123$").Result;
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                result = usrMng.AddClaimsAsync(bob, new Claim[]{
+                result = userManager.AddClaimsAsync(bob, new Claim[]{
                     new (JwtClaimTypes.Name, "Bob Smith"),
                     new (JwtClaimTypes.GivenName, "Bob"),
                     new (JwtClaimTypes.FamilyName, "Smith"),
