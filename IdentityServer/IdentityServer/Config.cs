@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Models;
+﻿using IdentityServer4;
+using IdentityServer4.Models;
 
 namespace IdentityServer
 {
@@ -8,6 +9,7 @@ namespace IdentityServer
             new List<ApiScope>
             {
                 new ("GYM.API", "GYM API")
+               // new("NewsAggregator", "News aggregator")
             };
 
         public static IEnumerable<Client> Clients =>
@@ -25,6 +27,25 @@ namespace IdentityServer
 
                     // scopes that client has access to
                     AllowedScopes = { "GYM.API" }
+                },
+                new Client
+                {
+                    ClientId = "mvc",
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+
+                    AllowedGrantTypes = GrantTypes.Code,
+                   
+                    // where to redirect to after login
+                    RedirectUris = { "https://localhost:7213/signin-oidc" },
+
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { "https://localhost:7213/signout-callback-oidc" },
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
                 }
             };
 
@@ -35,7 +56,7 @@ namespace IdentityServer
               new IdentityResources.Profile()
             };
 
-        public static IEnumerable<ApiResource> GetApiResorces =>
+        public static IEnumerable<ApiResource> GetApiResources =>
             new List<ApiResource>
             {
                 new ApiResource("GYM.API")

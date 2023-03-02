@@ -1,17 +1,41 @@
-using IdentityServer;
+using IdentityServer.Data;
+using IdentityServer.Models;
+using IdentityServerHost.Quickstart.UI;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
-// Add services to the container.
+// Microsoft Identity
+builder.Services.AddDbContext<AuthApplicationContext>(options =>
+    options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!));
+
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddEntityFrameworkStores<AuthApplicationContext>();
+
+var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
+
 builder.Services.AddIdentityServer()
-    .AddInMemoryIdentityResources(Config.GetResources)       //This is for dev only scenarios when you don’t have a certificate to use.
-    .AddInMemoryApiScopes(Config.ApiScopes)
-    .AddInMemoryClients(Config.Clients)
-    .AddInMemoryApiResources(Config.GetApiResorces)
-    .AddDeveloperSigningCredential();
-builder.Services.AddControllers();
+    .AddTestUsers(TestUsers.Users)
+    .AddConfigurationStore(options =>
+    {
+        options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
+            sql => sql.MigrationsAssembly(migrationsAssembly));
+    })
+    .AddOperationalStore(options =>
+    {
+        options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
+            sql => sql.MigrationsAssembly(migrationsAssembly));
+    });
+
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthorization();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -20,13 +44,23 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
 
-app.MapControllers();
+app.UseRouting();
+
+app.UseAuthorization();
+
 app.UseIdentityServer();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapDefaultControllerRoute();
+});
 
 app.Run();
