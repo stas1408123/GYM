@@ -12,7 +12,7 @@ namespace IdentityServerHost.Quickstart.UI
         public override void OnResultExecuting(ResultExecutingContext context)
         {
             var result = context.Result;
-            if (result is ViewResult)
+            if (result is ViewResult || result is RedirectToActionResult)
             {
                 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
                 if (!context.HttpContext.Response.Headers.ContainsKey("X-Content-Type-Options"))
