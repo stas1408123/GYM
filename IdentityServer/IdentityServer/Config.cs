@@ -8,8 +8,8 @@ namespace IdentityServer
         public static IEnumerable<ApiScope> ApiScopes =>
             new List<ApiScope>
             {
-                new ("GYM.API", "GYM API"),
-                new("News.Api", "News ApPI")
+                new ("GYM.API", "GYM API")
+               // new("NewsAggregator", "News aggregator")
             };
 
         public static IEnumerable<Client> Clients =>
@@ -27,19 +27,6 @@ namespace IdentityServer
 
                     // scopes that client has access to
                     AllowedScopes = { "GYM.API" }
-                },
-                new Client
-                {
-                    ClientId = "client_id",
-
-                    // no interactive user, use the clientId/secret for authentication
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-
-                    // secret for authentication
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-
-                    // scopes that client has access to
-                    AllowedScopes = { "News.API" }
                 },
                 new Client
                 {
@@ -72,9 +59,9 @@ namespace IdentityServer
         public static IEnumerable<ApiResource> GetApiResources =>
             new List<ApiResource>
             {
-                new ApiResource("GYM.API"),
-                new ApiResource("News.Api")
+                new ApiResource("GYM.API")
             };
     }
+
 
 }

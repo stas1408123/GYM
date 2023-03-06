@@ -3,12 +3,10 @@ using FluentValidation;
 using GYM.API.Models;
 using GYM.BLL.Abstractions;
 using GYM.BLL.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GYM.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CouchesController : ControllerBase
@@ -16,7 +14,6 @@ namespace GYM.API.Controllers
         private readonly IGenericService<CouchModel> _couchService;
         private readonly IMapper _mapper;
         private readonly IValidator<CouchViewModel> _validator;
-
 
         public CouchesController(IGenericService<CouchModel> service, IMapper mapper, IValidator<CouchViewModel> validator)
         {
