@@ -18,6 +18,7 @@ var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
 
 builder.Services.AddIdentityServer()
     .AddTestUsers(TestUsers.Users)
+    .AddDeveloperSigningCredential()
     .AddConfigurationStore(options =>
     {
         options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
@@ -27,8 +28,7 @@ builder.Services.AddIdentityServer()
     {
         options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
             sql => sql.MigrationsAssembly(migrationsAssembly));
-    })
-    .AddDeveloperSigningCredential();
+    });
 
 builder.Services.AddControllersWithViews();
 
