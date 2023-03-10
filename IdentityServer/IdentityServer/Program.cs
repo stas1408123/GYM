@@ -7,7 +7,8 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-// Microsoft Identity
+//Identity with Db
+
 builder.Services.AddDbContext<AuthApplicationContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!));
 
@@ -18,17 +19,18 @@ var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
 
 builder.Services.AddIdentityServer()
     .AddTestUsers(TestUsers.Users)
+    .AddDeveloperSigningCredential()
     .AddConfigurationStore(options =>
     {
         options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
             sql => sql.MigrationsAssembly(migrationsAssembly));
     })
     .AddOperationalStore(options =>
-    {
-        options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
-            sql => sql.MigrationsAssembly(migrationsAssembly));
-    })
-    .AddDeveloperSigningCredential();
+        {
+            options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
+                sql => sql.MigrationsAssembly(migrationsAssembly));
+        }
+        );
 
 builder.Services.AddControllersWithViews();
 

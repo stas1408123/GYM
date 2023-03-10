@@ -10,14 +10,17 @@ namespace IdentityServer.Data
 {
     public static class SeedData
     {
-
         public static void InitializeDatabase(IApplicationBuilder app)
         {
+
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()!.CreateScope();
+
             serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 
             var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+
             context.Database.Migrate();
+
 
             if (!context.Clients.Any())
             {
@@ -25,6 +28,7 @@ namespace IdentityServer.Data
                 {
                     context.Clients.Add(client.ToEntity());
                 }
+
                 context.SaveChanges();
             }
 
@@ -34,6 +38,7 @@ namespace IdentityServer.Data
                 {
                     context.IdentityResources.Add(resource.ToEntity());
                 }
+
                 context.SaveChanges();
             }
 
@@ -43,6 +48,7 @@ namespace IdentityServer.Data
                 {
                     context.ApiScopes.Add(resource.ToEntity());
                 }
+
                 context.SaveChanges();
             }
         }
