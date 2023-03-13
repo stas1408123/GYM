@@ -1,9 +1,3 @@
-using IdentityServer.Data;
-using IdentityServer.Models;
-using IdentityServerHost.Quickstart.UI;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
@@ -26,11 +20,11 @@ builder.Services.AddIdentityServer()
             sql => sql.MigrationsAssembly(migrationsAssembly));
     })
     .AddOperationalStore(options =>
-        {
-            options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
-                sql => sql.MigrationsAssembly(migrationsAssembly));
-        }
-        );
+    {
+        options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
+            sql => sql.MigrationsAssembly(migrationsAssembly));
+    })
+    .AddDeveloperSigningCredential();
 
 builder.Services.AddControllersWithViews();
 
