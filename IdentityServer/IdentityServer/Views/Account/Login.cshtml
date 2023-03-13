@@ -7,7 +7,7 @@
     </div>
 
     <partial name="_ValidationSummary" />
-
+    
     <div class="row">
 
         @if (Model.EnableLocalLogin)
@@ -46,6 +46,9 @@
                         </form>
                     </div>
                 </div>
+                <a asp-controller="Account" asp-action="Register" asp-route-returnUrl=@Model.ReturnUrl>
+                    Create new user
+                </a>
             </div>
         }
 

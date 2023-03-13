@@ -27,13 +27,15 @@ builder.Services.AddIdentityServer()
     {
         options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
             sql => sql.MigrationsAssembly(migrationsAssembly));
-    });
+    })
+    .AddDeveloperSigningCredential();
 
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAuthorization();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
@@ -41,8 +43,11 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 SeedData.InitializeDatabase(app);
+
 SeedData.EnsurePopulatedUsers(app);
+
 // Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
