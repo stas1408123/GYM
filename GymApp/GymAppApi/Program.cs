@@ -2,9 +2,9 @@ using GYM.API.Data;
 using GYM.API.DI;
 using GYM.API.Extensions;
 using GYM.API.Middleware;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -63,19 +63,19 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddAuthentication(options =>
     {
-        options.DefaultScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     })
-    //.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
-    //    options => builder.Configuration.Bind("JwtSettings", options))
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-        options => builder.Configuration.Bind("CookieSettings", options))
-    .AddIdentityServerAuthentication(options =>
+    .AddJwtBearer(options =>
     {
-        options.ApiName = "SwaggerAPI";
         options.Authority = "https://localhost:7181";
         options.RequireHttpsMetadata = false;
+        options.Audience = "SwaggerAPI";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+        };
     });
 
 builder.Services.AddAuthorization();
