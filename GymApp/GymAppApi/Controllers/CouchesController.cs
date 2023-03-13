@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GYM.API.Controllers
 {
-    [Authorize]
+    [Authorize("AllMethodsAllowed")]
     [Route("api/[controller]")]
     [ApiController]
     public class CouchesController : ControllerBase
@@ -23,8 +23,7 @@ namespace GYM.API.Controllers
             _mapper = mapper;
             _validator = validator;
         }
-        
-        [Authorize]
+
         // GET: api/Couches
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CouchViewModel>>> GetCouches()

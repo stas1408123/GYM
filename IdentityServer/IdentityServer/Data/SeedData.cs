@@ -12,7 +12,6 @@ namespace IdentityServer.Data
     {
         public static void InitializeDatabase(IApplicationBuilder app)
         {
-
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()!.CreateScope();
 
             serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
@@ -58,7 +57,7 @@ namespace IdentityServer.Data
             var context = app.ApplicationServices
                  .CreateScope().ServiceProvider.GetService<AuthApplicationContext>()!;
 
-            if (context.Database.GetPendingMigrations().Any())
+            if (!context.Database.GetPendingMigrations().Any())
             {
                 context.Database.Migrate();
             }
