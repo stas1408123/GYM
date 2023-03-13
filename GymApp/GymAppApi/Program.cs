@@ -1,10 +1,12 @@
+using GYM.API.Const.Authorization;
 using GYM.API.Data;
 using GYM.API.DI;
 using GYM.API.Extensions;
 using GYM.API.Middleware;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -60,25 +62,34 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-
 builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+{
+    options.Authority = "https://localhost:7181";
+    options.RequireHttpsMetadata = false;
+    options.Audience = "SwaggerAPI";
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.DefaultScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
-    })
-    //.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
-    //    options => builder.Configuration.Bind("JwtSettings", options))
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-        options => builder.Configuration.Bind("CookieSettings", options))
-    .AddIdentityServerAuthentication(options =>
-    {
-        options.ApiName = "SwaggerAPI";
-        options.Authority = "https://localhost:7181";
-        options.RequireHttpsMetadata = false;
-    });
+        ValidateAudience = false,
+    };
+});
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(PolicyAuthorizationParameters.PolicyDefaultScheme,
+        policy => policy.RequireScope(
+            PolicyAuthorizationParameters.ScopeGymApi,
+            PolicyAuthorizationParameters.ScopeNewsApi,
+            PolicyAuthorizationParameters.ScopeSwaggerApi
+            ));
+});
 
 builder.Services.AddDbContext<GymDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("GymDbDefault")));
 
@@ -103,6 +114,7 @@ if (app.Environment.IsDevelopment())
         options.OAuthClientId("swagger_id");
         options.OAuthScopeSeparator(" ");
         options.OAuthClientSecret("secret");
+        options.OAuthUseBasicAuthenticationWithAccessCodeGrant();
     });
 }
 
@@ -120,7 +132,7 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers().RequireAuthorization();
+    endpoints.MapControllers();
 });
 //app.MapControllers();
 

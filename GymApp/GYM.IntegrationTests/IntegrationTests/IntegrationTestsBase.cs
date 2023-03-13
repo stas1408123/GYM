@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using GYM.DAL.EF;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,7 @@ namespace GYM.API.IntegrationTests.IntegrationTests
                     {
                         options.UseInMemoryDatabase("InMemoryGymAppTest");
                     });
+                    services.AddSingleton<IPolicyEvaluator, FakeAuthEvaluator>();
                 });
             });
 

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GYM.API.Controllers
 {
-    [Authorize]
+    [Authorize("AllMethodsAllowed")]
     [Route("api/[controller]")]
     [ApiController]
     public class VisitorsController : ControllerBase
