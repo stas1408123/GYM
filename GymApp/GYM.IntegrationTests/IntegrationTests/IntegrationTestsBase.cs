@@ -35,6 +35,7 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             DbContextForTests = webHost.Services.CreateScope().ServiceProvider.GetService<GymAppDbContext>()!;
         }
 
+
         public HttpClient ClientForTests { get; }
 
         public GymAppDbContext DbContextForTests { get; }
