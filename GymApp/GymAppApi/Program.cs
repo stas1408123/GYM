@@ -1,15 +1,3 @@
-using GYM.API.Const.Authorization;
-using GYM.API.Data;
-using GYM.API.DI;
-using GYM.API.Extensions;
-using GYM.API.Middleware;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerUI;
-
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
@@ -105,17 +93,7 @@ var logger = app.Logger;
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger UI Demo");
-        options.DocumentTitle = "Title";
-        options.DocExpansion(DocExpansion.List);
-        options.OAuthClientId("swagger_id");
-        options.OAuthScopeSeparator(" ");
-        options.OAuthClientSecret("secret");
-        options.OAuthUseBasicAuthenticationWithAccessCodeGrant();
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseRouting();
@@ -130,11 +108,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
-//app.MapControllers();
+app.MapControllers();
 
 app.Run();
 

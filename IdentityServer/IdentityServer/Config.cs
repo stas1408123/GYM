@@ -1,8 +1,4 @@
-﻿using IdentityModel;
-using IdentityServer4;
-using IdentityServer4.Models;
-
-namespace IdentityServer
+﻿namespace IdentityServer
 {
     public static class Config
     {
@@ -10,6 +6,9 @@ namespace IdentityServer
             new List<ApiScope>
             {
                 new ("GYM.API", "GYM API"),
+                new("News.Api", "News ApPI"),
+                new ("SwaggerAPI", "Swagger API")
+               // new ("GYM.API", "GYM API"),
                 new("News.Api", "News ApPI"),
                 new ("SwaggerAPI", "Swagger API")
             };
@@ -35,6 +34,19 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     }
+                },
+                new Client
+                {
+                    ClientId = "client_id",
+
+                    // no interactive user, use the clientId/secret for authentication
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+                    // secret for authentication
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+
+                    // scopes that client has access to
+                    AllowedScopes = { "News.API" }
                 },
                 new Client
                 {
@@ -82,6 +94,20 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     }
+                },
+
+                new Client
+                {
+                    ClientId = "swagger_id",
+                    ClientSecrets = { new Secret("secret".ToSha256()) },
+                    AllowedGrantTypes =  GrantTypes.ResourceOwnerPassword,
+                    AllowedCorsOrigins = { "https://localhost:7163" },
+                    AllowedScopes =
+                    {
+                        "SwaggerAPI",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
                 }
             };
 
@@ -95,7 +121,7 @@ namespace IdentityServer
         public static IEnumerable<ApiResource> GetApiResources =>
             new List<ApiResource>
             {
-                new ("News.Api", "News API"),
+                new ("News.Api"),
                 new ("SwaggerAPI", "Swagger API")
             };
     }

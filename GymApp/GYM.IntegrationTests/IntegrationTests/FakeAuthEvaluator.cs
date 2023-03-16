@@ -1,12 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
-
-namespace GYM.API.IntegrationTests.IntegrationTests
+﻿namespace GYM.API.IntegrationTests.IntegrationTests
 {
-    internal class FakeAuthEvaluator : IPolicyEvaluator
+    public class FakeAuthEvaluator : IPolicyEvaluator
     {
         public async Task<AuthenticateResult> AuthenticateAsync(AuthorizationPolicy policy, HttpContext context)
         {

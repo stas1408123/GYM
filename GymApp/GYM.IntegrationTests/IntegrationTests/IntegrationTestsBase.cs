@@ -1,12 +1,4 @@
-﻿using AutoFixture;
-using GYM.DAL.EF;
-using Microsoft.AspNetCore.Authorization.Policy;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace GYM.API.IntegrationTests.IntegrationTests
+﻿namespace GYM.API.IntegrationTests.IntegrationTests
 {
     public class IntegrationTestsBase
     {
@@ -27,13 +19,16 @@ namespace GYM.API.IntegrationTests.IntegrationTests
                     {
                         options.UseInMemoryDatabase("InMemoryGymAppTest");
                     });
+
                     services.AddSingleton<IPolicyEvaluator, FakeAuthEvaluator>();
+
                 });
             });
 
             ClientForTests = webHost.CreateClient();
             DbContextForTests = webHost.Services.CreateScope().ServiceProvider.GetService<GymAppDbContext>()!;
         }
+
 
         public HttpClient ClientForTests { get; }
 
