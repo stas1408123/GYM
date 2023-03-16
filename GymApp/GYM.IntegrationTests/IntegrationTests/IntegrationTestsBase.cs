@@ -27,6 +27,7 @@ namespace GYM.API.IntegrationTests.IntegrationTests
                     {
                         options.UseInMemoryDatabase("InMemoryGymAppTest");
                     });
+
                     services.AddSingleton<IPolicyEvaluator, FakeAuthEvaluator>();
                 });
             });
@@ -34,6 +35,7 @@ namespace GYM.API.IntegrationTests.IntegrationTests
             ClientForTests = webHost.CreateClient();
             DbContextForTests = webHost.Services.CreateScope().ServiceProvider.GetService<GymAppDbContext>()!;
         }
+
 
         public HttpClient ClientForTests { get; }
 
