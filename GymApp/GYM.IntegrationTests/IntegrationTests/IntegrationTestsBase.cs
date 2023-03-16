@@ -1,4 +1,12 @@
-﻿namespace GYM.API.IntegrationTests.IntegrationTests
+﻿using AutoFixture;
+using GYM.DAL.EF;
+using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace GYM.API.IntegrationTests.IntegrationTests
 {
     public class IntegrationTestsBase
     {

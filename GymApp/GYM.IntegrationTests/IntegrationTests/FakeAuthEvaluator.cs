@@ -1,4 +1,10 @@
-﻿namespace GYM.API.IntegrationTests.IntegrationTests
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+
+namespace GYM.API.IntegrationTests.IntegrationTests
 {
     public class FakeAuthEvaluator : IPolicyEvaluator
     {
