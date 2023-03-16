@@ -1,0 +1,63 @@
+﻿@page "/orders"
+
+@inject IGenericService<OrderViewModel> OrdersService
+
+<PageTitle>Orders</PageTitle>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="/order/add" class="btn btn-primary" role="button">
+            <i class="oi-plus"></i>
+            Add User
+        </a>
+    </div>
+
+</div>
+
+@if (OrderViewModels == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Cost</th>
+                <th>Description</th>
+                <th>Visitor Id</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in OrderViewModels)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.Title</td>
+                    <td>@order.Cost</td>
+                    <td>@order.Description</td>
+                    <td>@order.VisitorId</td>
+                    <td>
+                        <a href='/order/edit/@order.Id' class="btn btn-outline-dark" role="button">
+                            Edit
+                        </a>
+                        <a href='/order/delete/@order.Id' class="btn btn-outline-danger" role="button">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    public IEnumerable<OrderViewModel>? OrderViewModels;
+
+    protected override async Task OnInitializedAsync()
+    {
+        OrderViewModels = await OrdersService.GetAll();
+    }
+}

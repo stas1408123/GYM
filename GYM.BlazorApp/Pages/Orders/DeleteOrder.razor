@@ -1,0 +1,58 @@
+﻿@page "/order/delete/{orderId:int}"
+
+@inject NavigationManager NavigationManager
+@inject IGenericService<OrderViewModel> OrderService
+<br />
+
+<div class="card-group">
+    <h4>Do you want to delete this user?</h4>
+    <table class="table">
+        <tbody>
+            <tr>
+                <td>Order Id</td>
+                <td>@_order!.Id</td>
+            </tr>
+            <tr>
+                <td>Title</td>
+                <td>@_order.Title</td>
+            </tr>
+            <tr>
+                <td>Cost</td>
+                <td>@_order.Cost</td>
+            </tr>
+            <tr>
+                <td>Date</td>
+                <td>@_order.Date</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="btn-group">
+    <input type="submit" value="Delete" @onclick="(async () => await RemoveOrder(_order.Id))" class="btn btn-danger" />
+    <input type="submit" value="Cancel" @onclick="Cancel" class="btn btn-warning" />
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int OrderId { get; set; }
+
+    OrderViewModel? _order = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _order = await OrderService.Get("/" + Convert.ToInt32(OrderId));
+    }
+
+    private async Task RemoveOrder(int couchId)
+    {
+        await OrderService.Delete("/" + couchId);
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/orders");
+    }
+
+}
