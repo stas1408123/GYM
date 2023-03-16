@@ -1,0 +1,66 @@
+﻿@page "/couches"
+@using GYM.BlazorApp.Interfaces
+
+<PageTitle>Couches</PageTitle>
+
+@inject IGenericService<CouchViewModel> CouchesService
+
+<h1>Couches service</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="/couch/add" class="btn btn-primary" role="button">
+            <i class="oi-plus"></i>
+            Add User
+        </a>
+    </div>
+    
+</div>
+
+@if (CouchesViewModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First name </th>
+                <th>Last name </th>
+                <th>Description </th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var couch in CouchesViewModel)
+            {
+                <tr>
+                    <td>@couch.Id</td>
+                    <td>@couch.FirstName</td>
+                    <td>@couch.LastName</td>
+                    <td>@couch.Description</td>
+                    <td>
+                        <a href='/couch/edit/@couch.Id' class="btn btn-outline-dark" role="button">
+                            Edit
+                        </a>
+                        <a href='/couch/delete/@couch.Id' class="btn btn-outline-danger" role="button">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    public IEnumerable<CouchViewModel>? CouchesViewModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        CouchesViewModel = await CouchesService.GetAll();
+    }
+
+}

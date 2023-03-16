@@ -25,6 +25,14 @@ namespace GYM.API.Controllers
         }
 
         // GET: api/Couches
+        [HttpGet("test")]
+        public ActionResult<string> GetCouchesTest()
+        {
+            return Ok("Test string from GYM.API");
+        }
+
+
+        // GET: api/Couches
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CouchViewModel>>> GetCouches()
         {
