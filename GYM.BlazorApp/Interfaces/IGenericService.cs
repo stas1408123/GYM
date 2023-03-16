@@ -6,6 +6,6 @@
         Task<TModel?> Get(string route);
         Task Create(TModel item);
         Task Update(TModel item);
-        Task Delete(int id);
+        Task Delete(string route);
     }
 }
