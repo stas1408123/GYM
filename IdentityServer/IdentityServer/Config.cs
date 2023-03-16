@@ -1,4 +1,8 @@
-﻿namespace IdentityServer
+﻿using IdentityModel;
+using IdentityServer4;
+using IdentityServer4.Models;
+
+namespace IdentityServer
 {
     public static class Config
     {
@@ -6,11 +10,8 @@
             new List<ApiScope>
             {
                 new ("GYM.API", "GYM API"),
-                new("News.Api", "News ApPI"),
-                new ("SwaggerAPI", "Swagger API")
-               // new ("GYM.API", "GYM API"),
-                new("News.Api", "News ApPI"),
-                new ("SwaggerAPI", "Swagger API")
+                new("News.Api", "News API"),
+                new ("SwaggerAPI", "Swagger API"),
             };
 
         public static IEnumerable<Client> Clients =>
