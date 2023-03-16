@@ -1,3 +1,14 @@
+using GYM.API.Const.Authorization;
+using GYM.API.Data;
+using GYM.API.DI;
+using GYM.API.Extensions;
+using GYM.API.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
