@@ -1,8 +1,4 @@
-﻿using IdentityModel;
-using IdentityServer4;
-using IdentityServer4.Models;
-
-namespace IdentityServer
+﻿namespace IdentityServer
 {
     public static class Config
     {
@@ -101,8 +97,8 @@ namespace IdentityServer
                 {
                     ClientId = "swagger_id",
                     ClientSecrets = { new Secret("secret".ToSha256()) },
-                    AllowedGrantTypes =  GrantTypes.ResourceOwnerPassword,
-                    AllowedCorsOrigins = { "https://localhost:7163" },
+                    AllowedGrantTypes =  GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    AllowedCorsOrigins = { "https://localhost:7163","https://localhost:7181" },
                     AllowedScopes =
                     {
                         "SwaggerAPI",
