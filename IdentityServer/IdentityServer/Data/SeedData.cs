@@ -58,7 +58,7 @@ namespace IdentityServer.Data
             var context = app.ApplicationServices
                  .CreateScope().ServiceProvider.GetService<AuthApplicationContext>()!;
 
-            if (context.Database.GetPendingMigrations().Any())
+            if (!context.Database.GetPendingMigrations().Any())
             {
                 context.Database.Migrate();
             }

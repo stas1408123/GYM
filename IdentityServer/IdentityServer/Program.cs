@@ -1,6 +1,6 @@
 using IdentityServer.Data;
 using IdentityServer.Models;
-using IdentityServerHost.Quickstart.UI;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -10,25 +10,39 @@ var configuration = builder.Configuration;
 //Identity with Db
 
 builder.Services.AddDbContext<AuthApplicationContext>(options =>
-    options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!));
+     options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!))
+    .AddIdentity<ApplicationUser, ApplicationRole>(config =>
+    {
+        config.Password.RequireDigit = false;
+        config.Password.RequireLowercase = false;
+        config.Password.RequireNonAlphanumeric = false;
+        config.Password.RequireUppercase = false;
+        config.Password.RequiredLength = 6;
+    })
+    .AddEntityFrameworkStores<AuthApplicationContext>()
+    .AddDefaultTokenProviders();
 
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddEntityFrameworkStores<AuthApplicationContext>();
+builder.Services.ConfigureApplicationCookie(config =>
+{
+    config.Cookie.Name = "IdentityServer.Cookies";
+});
 
 var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
 
 builder.Services.AddIdentityServer()
-    .AddTestUsers(TestUsers.Users)
-    .AddDeveloperSigningCredential()
-    .AddConfigurationStore(options =>
-    {
-        options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
+.AddAspNetIdentity<ApplicationUser>()
+.AddConfigurationStore(options =>
+{
+    options.ConfigureDbContext = b =>
+        b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString"),
             sql => sql.MigrationsAssembly(migrationsAssembly));
-    })
-    .AddOperationalStore(options =>
-    {
-        options.ConfigureDbContext = b => b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")!,
+})
+.AddOperationalStore(options =>
+{
+    options.ConfigureDbContext = b =>
+        b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString"),
             sql => sql.MigrationsAssembly(migrationsAssembly));
+
     })
     .AddDeveloperSigningCredential();
 
@@ -40,7 +54,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

@@ -1,8 +1,10 @@
+using GYM.API.Const.Authorization;
 using GYM.API.Data;
 using GYM.API.DI;
 using GYM.API.Extensions;
 using GYM.API.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -41,7 +43,6 @@ builder.Services.AddSwaggerGen(options =>
             }
         }
     });
-
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -60,25 +61,34 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-
 builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
+{
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
+{
+    options.Authority = "https://localhost:7181";
+    options.RequireHttpsMetadata = false;
+    options.Audience = "SwaggerAPI";
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.Authority = "https://localhost:7181";
-        options.RequireHttpsMetadata = false;
-        options.Audience = "SwaggerAPI";
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false,
-        };
-    });
+        ValidateAudience = false,
+    };
+});
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(PolicyAuthorizationParameters.PolicyDefaultScheme,
+        policy => policy.RequireScope(
+            PolicyAuthorizationParameters.ScopeGymApi,
+            PolicyAuthorizationParameters.ScopeNewsApi,
+            PolicyAuthorizationParameters.ScopeSwaggerApi
+            ));
+});
 
 builder.Services.AddDbContext<GymDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("GymDbDefault")));
 
@@ -103,6 +113,7 @@ if (app.Environment.IsDevelopment())
         options.OAuthClientId("swagger_id");
         options.OAuthScopeSeparator(" ");
         options.OAuthClientSecret("secret");
+        options.OAuthUseBasicAuthenticationWithAccessCodeGrant();
     });
 }
 
@@ -120,7 +131,7 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers().RequireAuthorization();
+    endpoints.MapControllers();
 });
 //app.MapControllers();
 

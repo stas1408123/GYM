@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace GYM.API.IntegrationTests.IntegrationTests
 {
-    public class FakeAuthEvaluator : IPolicyEvaluator
+    internal class FakeAuthEvaluator : IPolicyEvaluator
     {
         public async Task<AuthenticateResult> AuthenticateAsync(AuthorizationPolicy policy, HttpContext context)
         {
@@ -28,3 +28,4 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         }
     }
 }
+
