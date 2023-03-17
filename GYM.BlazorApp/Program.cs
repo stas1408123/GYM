@@ -12,6 +12,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<IGenericService<CouchViewModel>, CouchesService>();
 builder.Services.AddScoped<IGenericService<OrderViewModel>, OrdersService>();
+builder.Services.AddScoped<IGenericService<VisitorViewModel>, VisitorsService>();
 
 var app = builder.Build();
 
