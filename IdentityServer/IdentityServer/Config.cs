@@ -106,6 +106,7 @@ namespace IdentityServer
                     AllowedScopes =
                     {
                         "SwaggerAPI",
+                        "GYM.API",
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     }
@@ -122,7 +123,7 @@ namespace IdentityServer
         public static IEnumerable<ApiResource> GetApiResources =>
             new List<ApiResource>
             {
-                new ("News.Api"),
+                new ("News.Api", "News API"),
                 new ("SwaggerAPI", "Swagger API")
             };
     }

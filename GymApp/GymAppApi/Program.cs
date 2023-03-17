@@ -42,7 +42,6 @@ builder.Services.AddSwaggerGen(options =>
             }
         }
     });
-
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -103,8 +102,17 @@ var logger = app.Logger;
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+   
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger UI Demo");
+        options.DocumentTitle = "Title";
+        options.DocExpansion(DocExpansion.List);
+        options.OAuthClientId("swagger_id");
+        options.OAuthScopeSeparator(" ");
+        options.OAuthClientSecret("secret");
+        options.OAuthUseBasicAuthenticationWithAccessCodeGrant();
+    });
 }
 
 app.UseRouting();
@@ -119,7 +127,11 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+//app.MapControllers();
 
 app.Run();
 

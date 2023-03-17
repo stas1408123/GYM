@@ -42,6 +42,7 @@ builder.Services.AddIdentityServer()
     options.ConfigureDbContext = b =>
         b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString"),
             sql => sql.MigrationsAssembly(migrationsAssembly));
+
 })
 .AddDeveloperSigningCredential();
 
@@ -53,7 +54,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
