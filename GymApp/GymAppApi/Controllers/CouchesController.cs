@@ -24,7 +24,6 @@ namespace GYM.API.Controllers
             _validator = validator;
         }
 
-        [Authorize]
         // GET: api/Couches
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CouchViewModel>>> GetCouches()
