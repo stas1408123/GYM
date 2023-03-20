@@ -10,8 +10,8 @@ namespace IdentityServer
             new List<ApiScope>
             {
                 new ("GYM.API", "GYM API"),
-                new("News.Api", "News ApPI"),
-                new ("SwaggerAPI", "Swagger API")
+                new("News.Api", "News API"),
+                new ("SwaggerAPI", "Swagger API"),
             };
 
         public static IEnumerable<Client> Clients =>
@@ -88,6 +88,21 @@ namespace IdentityServer
                     ClientSecrets = { new Secret("secret".ToSha256()) },
                     AllowedGrantTypes =  GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     AllowedCorsOrigins = { "https://localhost:7163","https://localhost:7181" },
+                    AllowedScopes =
+                    {
+                        "SwaggerAPI",
+                        "GYM.API",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
+                },
+
+                new Client
+                {
+                    ClientId = "swagger_id",
+                    ClientSecrets = { new Secret("secret".ToSha256()) },
+                    AllowedGrantTypes =  GrantTypes.ResourceOwnerPassword,
+                    AllowedCorsOrigins = { "https://localhost:7163" },
                     AllowedScopes =
                     {
                         "SwaggerAPI",

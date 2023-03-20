@@ -43,8 +43,8 @@ builder.Services.AddIdentityServer()
         b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString"),
             sql => sql.MigrationsAssembly(migrationsAssembly));
 
-    })
-    .AddDeveloperSigningCredential();
+})
+.AddDeveloperSigningCredential();
 
 builder.Services.AddControllersWithViews();
 
