@@ -42,6 +42,7 @@ builder.Services.AddIdentityServer()
     options.ConfigureDbContext = b =>
         b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString"),
             sql => sql.MigrationsAssembly(migrationsAssembly));
+
 })
 .AddDeveloperSigningCredential();
 

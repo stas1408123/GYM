@@ -10,8 +10,8 @@ namespace IdentityServer
             new List<ApiScope>
             {
                 new ("GYM.API", "GYM API"),
-                new("News.Api", "News ApPI"),
-                new ("SwaggerAPI", "Swagger API")
+                new("News.Api", "News API"),
+                new ("SwaggerAPI", "Swagger API"),
             };
 
         public static IEnumerable<Client> Clients =>
