@@ -2,6 +2,8 @@
 @page "/order/add"
 @page "/order/edit/{orderId:int}"
 
+@attribute [Authorize]
+
 @inject IGenericService<OrderViewModel> OrderService
 @inject NavigationManager NavigationManager
 

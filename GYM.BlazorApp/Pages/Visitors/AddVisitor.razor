@@ -2,6 +2,8 @@
 @page "/visitor/add"
 @page "/visitor/edit/{visitorId:int}"
 
+@attribute [Authorize]
+
 @inject IGenericService<VisitorViewModel> VisitorsService
 @inject NavigationManager NavigationManager
 <h1>@Title User</h1>

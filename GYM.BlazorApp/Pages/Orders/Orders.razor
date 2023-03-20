@@ -1,5 +1,7 @@
 ﻿@page "/orders"
 
+@attribute [Authorize]
+
 @inject IGenericService<OrderViewModel> OrdersService
 
 <PageTitle>Orders</PageTitle>
