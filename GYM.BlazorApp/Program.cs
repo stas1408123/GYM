@@ -33,7 +33,6 @@ builder.Services.AddAuthentication(options =>
             options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             options.SignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
             options.Authority = "https://localhost:7181";
-            //options.Authority = "https://demo.identityserver.com/Account/Login";
             options.ClientId = "mvc";
             options.ClientSecret = "secret";
 
