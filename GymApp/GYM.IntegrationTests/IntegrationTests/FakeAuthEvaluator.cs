@@ -28,4 +28,3 @@ namespace GYM.API.IntegrationTests.IntegrationTests
         }
     }
 }
-
