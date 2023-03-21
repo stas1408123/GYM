@@ -12,6 +12,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<IGenericService<CouchViewModel>, CouchesService>();
 
+builder.Services.AddScoped<IGenericService<OrderViewModel>, OrdersService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

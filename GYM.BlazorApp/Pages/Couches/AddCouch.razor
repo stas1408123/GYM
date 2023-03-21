@@ -2,10 +2,9 @@
 
 @page "/couch/add"
 @page "/couch/edit/{couchId:int}"
-@using GYM.BlazorApp.Interfaces
 
 @inject IGenericService<CouchViewModel> CouchService
-@inject HttpClient Http
+
 @inject NavigationManager NavigationManager
 <h1>@Title User</h1>
 <hr />
