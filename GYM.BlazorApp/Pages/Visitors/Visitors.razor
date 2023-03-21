@@ -1,0 +1,61 @@
+﻿@page "/visitors"
+
+<PageTitle>Visitors</PageTitle>
+
+@inject IGenericService<VisitorViewModel> VisitorsService
+
+<h1>Visitors service</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="/couch/add" class="btn btn-primary" role="button">
+            <i class="oi-plus"></i>
+            Add User
+        </a>
+    </div>
+</div>
+
+@if (VisitorViewModels == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>First name </th>
+            <th>Last name </th>
+            <th>Summary</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var visitor in VisitorViewModels)
+        {
+            <tr>
+                <td>@visitor.Id</td>
+                <td>@visitor.FirstName</td>
+                <td>@visitor.LastName</td>
+                <td>
+                    <a href='/visitor/edit/@visitor.Id' class="btn btn-outline-dark" role="button">
+                        Edit
+                    </a>
+                    <a href='/visitor/delete/@visitor.Id' class="btn btn-outline-danger" role="button">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code 
+{
+    public IEnumerable<VisitorViewModel>? VisitorViewModels;
+
+    protected override async Task OnInitializedAsync()
+    {
+        VisitorViewModels = await VisitorsService.GetAll();
+    }
+}

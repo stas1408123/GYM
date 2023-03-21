@@ -11,6 +11,8 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<IGenericService<CouchViewModel>, CouchesService>();
+builder.Services.AddScoped<IGenericService<OrderViewModel>, OrdersService>();
+builder.Services.AddScoped<IGenericService<VisitorViewModel>, VisitorsService>();
 
 builder.Services.AddScoped<IGenericService<OrderViewModel>, OrdersService>();
 

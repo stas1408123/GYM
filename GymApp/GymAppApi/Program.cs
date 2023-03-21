@@ -90,6 +90,7 @@ builder.Services.AddAuthorization(options =>
             ));
 });
 
+
 builder.Services.AddDbContext<GymDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("GymDbDefault")));
 
 builder.Services.AddEndpointsApiExplorer();
@@ -104,6 +105,7 @@ var logger = app.Logger;
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger UI Demo");

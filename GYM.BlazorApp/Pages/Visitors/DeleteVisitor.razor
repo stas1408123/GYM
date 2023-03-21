@@ -1,7 +1,7 @@
-﻿@page "/couch/delete/{couchId:int}"
+﻿@page "/visitor/delete/{visitorId:int}"
 
 @inject NavigationManager NavigationManager
-@inject IGenericService<CouchViewModel> CouchService
+@inject IGenericService<VisitorViewModel> VisitorsService
 <h2>Delete User</h2>
 <br />
 <div class="card-group">
@@ -10,42 +10,37 @@
         <tbody>
         <tr>
             <td>FirstName</td>
-            <td>@_couch!.FirstName</td>
+                <td>@_visitor!.FirstName</td>
         </tr>
         <tr>
             <td>LastName</td>
-            <td>@_couch.LastName</td>
-        </tr>
-        <tr>
-            <td>Description</td>
-            <td>@_couch.Description</td>
+                <td>@_visitor.LastName</td>
         </tr>
         </tbody>
     </table>
 </div>
 <div class="btn-group">
-    <input type="submit" value="Delete" @onclick="(async () => await RemoveUser(_couch.Id))" class="btn btn-danger" />
+    <input type="submit" value="Delete" @onclick="(async () => await RemoveUser(_visitor.Id))" class="btn btn-danger" />
     <input type="submit" value="Cancel" @onclick="Cancel" class="btn btn-warning" />
 </div>
 
 @code {
     [Parameter]
-    public int CouchId { get; set; }
-    CouchViewModel? _couch = new ();
-
+    public int VisitorId { get; set; }
+    VisitorViewModel? _visitor;
     protected override async Task OnInitializedAsync()
     {
-        _couch = await CouchService.Get("/" + Convert.ToInt32(CouchId));
+        _visitor = await VisitorsService.Get("/" + Convert.ToInt32(VisitorId));
     }
 
-    private async Task RemoveUser(int couchId)
+    private async Task RemoveUser(int visitorId)
     {
-       await CouchService.Delete("/"+couchId);
+        await VisitorsService.Delete("/" + visitorId);
     }
 
     private void Cancel()
     {
         NavigationManager.NavigateTo("/couches");
     }
-
 }
+
