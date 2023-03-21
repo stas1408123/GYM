@@ -1,5 +1,7 @@
 ﻿@page "/visitors"
 
+@attribute [Authorize]
+
 <PageTitle>Visitors</PageTitle>
 
 @inject IGenericService<VisitorViewModel> VisitorsService

@@ -1,5 +1,7 @@
 ﻿@page "/order/delete/{orderId:int}"
 
+@attribute [Authorize]
+
 @inject NavigationManager NavigationManager
 @inject IGenericService<OrderViewModel> OrderService
 <br />

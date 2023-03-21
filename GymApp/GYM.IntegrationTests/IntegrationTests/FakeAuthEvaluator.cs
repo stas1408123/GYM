@@ -6,7 +6,6 @@ using System.Security.Claims;
 
 namespace GYM.API.IntegrationTests.IntegrationTests
 {
-
     internal class FakeAuthEvaluator : IPolicyEvaluator
     {
         public async Task<AuthenticateResult> AuthenticateAsync(AuthorizationPolicy policy, HttpContext context)

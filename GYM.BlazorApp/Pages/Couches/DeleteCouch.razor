@@ -1,5 +1,7 @@
 ﻿@page "/couch/delete/{couchId:int}"
 
+@attribute [Authorize]
+
 @inject NavigationManager NavigationManager
 @inject IGenericService<CouchViewModel> CouchService
 <h2>Delete User</h2>
