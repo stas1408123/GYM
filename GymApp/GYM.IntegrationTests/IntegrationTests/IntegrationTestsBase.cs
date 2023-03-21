@@ -27,7 +27,6 @@ namespace GYM.API.IntegrationTests.IntegrationTests
                     {
                         options.UseInMemoryDatabase("InMemoryGymAppTest");
                     });
-
                     services.AddSingleton<IPolicyEvaluator, FakeAuthEvaluator>();
                 });
             });

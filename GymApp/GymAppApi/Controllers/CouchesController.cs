@@ -23,8 +23,7 @@ namespace GYM.API.Controllers
             _mapper = mapper;
             _validator = validator;
         }
-        
-        [Authorize]
+
         // GET: api/Couches
         [HttpGet("test")]
         public ActionResult<string> GetCouchesTest()

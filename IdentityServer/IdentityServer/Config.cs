@@ -10,8 +10,8 @@ namespace IdentityServer
             new List<ApiScope>
             {
                 new ("GYM.API", "GYM API"),
-                new("News.Api", "News ApPI"),
-                new ("SwaggerAPI", "Swagger API")
+                new("News.Api", "News API"),
+                new ("SwaggerAPI", "Swagger API"),
             };
 
         public static IEnumerable<Client> Clients =>
@@ -35,19 +35,7 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     }
-                },
-                new Client
-                {
-                    ClientId = "client_id",
 
-                    // no interactive user, use the clientId/secret for authentication
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-
-                    // secret for authentication
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-
-                    // scopes that client has access to
-                    AllowedScopes = { "News.API" }
                 },
                 new Client
                 {
