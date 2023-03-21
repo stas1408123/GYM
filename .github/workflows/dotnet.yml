@@ -29,7 +29,7 @@ jobs:
     - name: Restore Identity Server dependencies
       run: dotnet restore ${{ env.IDENTITY_SERVER_PATH }}
     - name: Restore GYM.BlazorApp restore
-      run: dotnet restore ${{ env.IDENTITY_SERVER_PATH }}
+      run: dotnet restore ${{ env.GYM_BLAZOR_CLIENT_PATH }}
   
     - name: Build GymApp
       run: dotnet build --no-restore ${{ env.SOLUTION_PATH }} 
