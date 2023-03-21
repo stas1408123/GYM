@@ -1,0 +1,77 @@
+﻿<h3>AddCouch</h3>
+
+@page "/couch/add"
+@page "/couch/edit/{couchId:int}"
+
+@inject IGenericService<CouchViewModel> CouchService
+
+@inject NavigationManager NavigationManager
+<h1>@Title User</h1>
+<hr />
+<EditForm Model="@Couch" OnValidSubmit="SaveUser">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="@Couch!.FirstName" class="form-label">Firstname</label>
+        <div class="col-md-4">
+            <InputText class="form-control" @bind-Value="Couch.FirstName" />
+        </div>
+        <ValidationMessage For="@(() => Couch.FirstName)" />
+    </div>
+    <div class="mb-3">
+        <label for="@Couch.LastName" class="form-label">Lastname</label>
+        <div class="col-md-4">
+            <InputText class="form-control" @bind-Value="Couch.LastName" />
+        </div>
+        <ValidationMessage For="@(() => Couch.LastName)" />
+    </div>
+    <div class="mb-3">
+        <label for="@Couch.Description" class="form-label">Cell No</label>
+        <div class="col-md-4">
+            <InputText class="form-control" @bind-Value="Couch.Description" />
+        </div>
+        <ValidationMessage For="@(() => Couch.Description)" />
+    </div>
+   
+    <div class="btn-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button class="btn btn-light" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int CouchId { get; set; }
+    protected string Title = "Add";
+    protected CouchViewModel? Couch = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (CouchId != 0)
+        {
+            Title = "Edit";
+            Couch = await CouchService.Get("/" + CouchId);
+        }
+    }
+
+    //public CouchViewModel couchViewModel;
+
+    private async Task SaveUser()
+    {
+        if (Couch!.Id != 0)
+        {
+            await CouchService.Update(Couch);
+        }
+        else
+        {
+            await CouchService.Create(Couch);
+        }
+
+        Cancel();
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/couches");
+    } 
+}

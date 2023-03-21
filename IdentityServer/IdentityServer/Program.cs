@@ -42,9 +42,14 @@ builder.Services.AddIdentityServer()
     options.ConfigureDbContext = b =>
         b.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString"),
             sql => sql.MigrationsAssembly(migrationsAssembly));
-
 })
 .AddDeveloperSigningCredential();
+
+builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+});
 
 builder.Services.AddControllersWithViews();
 

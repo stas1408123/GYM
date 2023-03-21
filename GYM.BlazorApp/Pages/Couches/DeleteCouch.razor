@@ -1,0 +1,53 @@
+﻿@page "/couch/delete/{couchId:int}"
+
+@using GYM.BlazorApp.Interfaces
+
+@inject NavigationManager NavigationManager
+@inject IGenericService<CouchViewModel> CouchService
+<h2>Delete User</h2>
+<br />
+<div class="card-group">
+    <h4>Do you want to delete this user?</h4>
+    <table class="table">
+        <tbody>
+        <tr>
+            <td>FirstName</td>
+            <td>@_couch!.FirstName</td>
+        </tr>
+        <tr>
+            <td>LastName</td>
+            <td>@_couch.LastName</td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td>@_couch.Description</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="btn-group">
+    <input type="submit" value="Delete" @onclick="(async () => await RemoveUser(_couch.Id))" class="btn btn-danger" />
+    <input type="submit" value="Cancel" @onclick="Cancel" class="btn btn-warning" />
+</div>
+
+@code {
+    [Parameter]
+    public int CouchId { get; set; }
+    CouchViewModel? _couch = new ();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _couch = await CouchService.Get("/" + Convert.ToInt32(CouchId));
+    }
+
+    private async Task RemoveUser(int couchId)
+    {
+       await CouchService.Delete("/"+couchId);
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/couches");
+    }
+
+}
