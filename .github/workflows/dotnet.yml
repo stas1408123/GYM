@@ -3,8 +3,9 @@
 
 name: .NET
 env:
-  SOLUTION_PATH       : GymApp/
-  IDENTITY_SERVER_PATH: IdentityServer/
+  SOLUTION_PATH          : GymApp/
+  IDENTITY_SERVER_PATH   : IdentityServer/
+  GYM_BLAZOR_CLIENT_PATH : GYM.BlazorApp/
   
 on:
   push:
@@ -27,6 +28,8 @@ jobs:
       run: dotnet restore ${{ env.SOLUTION_PATH }}
     - name: Restore Identity Server dependencies
       run: dotnet restore ${{ env.IDENTITY_SERVER_PATH }}
+    - name: Restore GYM.BlazorApp restore
+      run: dotnet restore ${{ env.GYM_BLAZOR_CLIENT_PATH }}
   
     - name: Build GymApp
       run: dotnet build --no-restore ${{ env.SOLUTION_PATH }} 
@@ -34,3 +37,5 @@ jobs:
       run:  dotnet test --no-build --verbosity normal ${{ env.SOLUTION_PATH }} 
     - name: Build Identity Server
       run: dotnet build --no-restore ${{ env.IDENTITY_SERVER_PATH }} 
+    - name: Build GYM.BlazorApp
+      run: dotnet build --no-restore ${{ env.GYM_BLAZOR_CLIENT_PATH }} 
