@@ -91,6 +91,7 @@ builder.Services.AddAuthorization(options =>
             ));
 });
 
+
 builder.Services.AddDbContext<GymDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("GymDbDefault")));
 
 builder.Services.AddEndpointsApiExplorer();
