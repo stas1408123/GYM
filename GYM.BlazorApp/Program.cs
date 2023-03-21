@@ -9,7 +9,6 @@ using System.IdentityModel.Tokens.Jwt;
 var builder = WebApplication.CreateBuilder(args);
 
 
-
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -51,8 +50,6 @@ builder.Services.AddAuthentication(options =>
             // UserInfoEndpoint during the flow. 
             //options.GetClaimsFromUserInfoEndpoint = true;
         });
-
-
 
 
 var app = builder.Build();

@@ -12,6 +12,7 @@ namespace IdentityServer.Data
     {
         public static void InitializeDatabase(IApplicationBuilder app)
         {
+
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()!.CreateScope();
 
             serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
