@@ -1,4 +1,8 @@
-﻿namespace IdentityServer
+﻿using IdentityModel;
+using IdentityServer4;
+using IdentityServer4.Models;
+
+namespace IdentityServer
 {
     public static class Config
     {
