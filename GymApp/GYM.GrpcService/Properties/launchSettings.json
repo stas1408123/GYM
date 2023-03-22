@@ -1,0 +1,13 @@
+﻿{
+  "profiles": {
+    "GYM.GrpcService": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5263;https://localhost:7253",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
