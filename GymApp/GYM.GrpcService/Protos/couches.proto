@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "GYM.GrpcService";
+
+package couches;
+
+// The greeting service definition.
+service CouchesService {
+  // Sends a greeting
+
+  rpc GetCoaches (google.protobuf.Empty) returns (ListCouchesReply)
+  {
+       option (google.api.http) = {
+      get: "/v1/couches"
+    };
+  }
+  rpc GetCoach(IdRequest) returns (CouchReply)
+   {
+       option (google.api.http) = {
+      get: "/v1/couches/{id}"
+    };
+  }
+
+  rpc CreateCoach(CouchCreateRequest) returns (google.protobuf.Empty)
+  {
+       option (google.api.http) = {
+      post: "/v1/couches"
+      body:"*"
+    };
+  }
+
+  rpc UpdateCoach(CouchUpdateRequest) returns (CouchReply)
+  {
+      option (google.api.http) = {
+      put: "/v1/couches"
+      body:"*"
+    };
+  }
+  rpc DeleteUser(IdRequest) returns (CouchReply)
+  {
+       option (google.api.http) = {
+      delete: "/v1/couches/{id}"
+    };
+  }
+}
+
+// The request message containing the user's name.
+
+message IdRequest 
+{
+    int32 id = 1;
+}
+
+message CouchCreateRequest 
+{
+    string name = 1;
+    string lastName = 2;
+    string description = 3;
+}
+message CouchUpdateRequest
+{
+    int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string description = 4;
+}
+
+
+// The response message containing the greetings.
+
+message ListCouchesReply{
+  repeated CouchReply Couches = 1;
+}
+ 
+message CouchReply {
+    int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string description = 4;
+}
