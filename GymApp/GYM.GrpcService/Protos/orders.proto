@@ -17,10 +17,32 @@ service OrdersService
 			 get: "/v1/orders"
 		};
 	}
-	rpc GetOrder(IdOrderRequest) returns (OrderReply);
-	rpc CreateOrder (CreateOrderRequest) returns (google.protobuf.Empty);
-	rpc UpdateOrder (UpdateOrderRequest) returns (OrderReply);
-	rpc DeleteOrder (IdOrderRequest) returns (OrderReply);
+	rpc GetOrder(IdOrderRequest) returns (OrderReply)
+	{
+		option (google.api.http) = {
+      get: "/v1/orders/{id}"
+    };
+	}
+	rpc CreateOrder (CreateOrderRequest) returns (google.protobuf.Empty)
+	{
+		option (google.api.http) = {
+      post: "/v1/orders"
+      body:"*"
+    };
+	}
+	rpc UpdateOrder (UpdateOrderRequest) returns (OrderReply)
+	{
+		 option (google.api.http) = {
+      put: "/v1/orders"
+      body:"*"
+    };
+	}
+	rpc DeleteOrder (IdOrderRequest) returns (OrderReply)
+	{
+		option (google.api.http) = {
+      delete: "/v1/orders/{id}"
+    };
+	}
  }
 
 
