@@ -10,8 +10,6 @@
 	<ItemGroup>
 	  <None Remove="Protos\couches.proto" />
 	</ItemGroup>
-	
-
 
 	<ItemGroup>
 		<Protobuf Include="Protos\couches.proto" GrpcServices="Server" />

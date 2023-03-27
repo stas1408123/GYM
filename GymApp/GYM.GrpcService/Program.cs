@@ -1,3 +1,7 @@
+using GYM.GrpcService.DI;
+using GYM.GrpcService.Services;
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
