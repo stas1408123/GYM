@@ -1,6 +1,3 @@
-using GYM.GrpcService.DI;
-using GYM.GrpcService.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
@@ -13,7 +10,16 @@ var configuration = builder.Configuration;
 builder.Services.AddDependenciesGrpcApi(configuration);
 builder.Services.AddGrpc().AddJsonTranscoding();
 
+builder.Services.AddGrpcSwagger().AddSwaggerGen(c => c.SwaggerDoc("v1",
+    new OpenApiInfo { Title = "gRPC trans-coding", Version = "v1" }));
+
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+});
 
 // Configure the HTTP request pipeline.
 app.MapGrpcService<GreeterService>();
