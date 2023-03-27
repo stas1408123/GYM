@@ -1,3 +1,6 @@
+using GYM.GrpcService.DI;
+using GYM.GrpcService.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
