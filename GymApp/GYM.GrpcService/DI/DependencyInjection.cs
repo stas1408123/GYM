@@ -9,11 +9,9 @@ namespace GYM.GrpcService.DI
     {
         public static void AddDependenciesGrpcApi(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddAutoMapper(typeof(ApiMappingProfile));
             services.AddScoped<IGenericService<OrderModel>, OrderService>();
             services.AddScoped<IGenericService<VisitorModel>, VisitorService>();
             services.AddScoped<IGenericService<CouchModel>, CouchService>();
-            //services.AddValidatorsFromAssemblyContaining<CouchValidator>();
             services.AddDependenciesBllLayer(configuration);
         }
     }
