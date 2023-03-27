@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "GYM.GrpcService";
+
+package orders;
+
+// Orders service definition
+service OrdersService
+{
+	rpc GetOrders(google.protobuf.Empty) returns (ListOrdersReply)
+	{
+		option (google.api.http) = {
+			 get: "/v1/orders"
+		};
+	}
+	rpc GetOrder(IdOrderRequest) returns (OrderReply);
+	rpc CreateOrder (CreateOrderRequest) returns (google.protobuf.Empty);
+	rpc UpdateOrder (UpdateOrderRequest) returns (OrderReply);
+	rpc DeleteOrder (IdOrderRequest) returns (OrderReply);
+ }
+
+
+ // Request messages
+ message IdOrderRequest
+ {
+	 int32 id = 1;
+ }
+
+ message CreateOrderRequest
+ {
+	 string title = 1;
+	 string description = 2;
+	 double cost = 3;
+	 google.protobuf.Timestamp date = 4;
+	 int32 visitorId = 5;
+ }
+
+ message UpdateOrderRequest
+ {
+	 int32 id = 1;
+	 string title = 2;
+	 string description = 3;
+	 double cost =4;
+	 google.protobuf.Timestamp date = 5;
+	 int32 visitorId = 6;
+ }
+
+ // Response messages
+
+ message ListOrdersReply 
+ {
+	 repeated OrderReply Orders = 1;
+ }
+
+ message OrderReply
+ {
+	 int32 id = 1;
+	 string title = 2;
+	 string description = 3;
+	 double cost =4;
+	 google.protobuf.Timestamp date = 5;
+	 int32 visitorId = 6;
+ }
