@@ -63,21 +63,21 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(options =>
-{
-    options.Authority = "https://localhost:7181";
-    options.RequireHttpsMetadata = false;
-    options.Audience = "SwaggerAPI";
-    options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateAudience = false,
-    };
-});
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.Authority = "https://localhost:7181";
+        options.RequireHttpsMetadata = false;
+        options.Audience = "SwaggerAPI";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+        };
+    });
 
 builder.Services.AddAuthorization();
 
