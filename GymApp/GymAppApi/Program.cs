@@ -70,7 +70,7 @@ builder.Services.AddAuthentication(options =>
     })
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
-        options.Authority = "https://localhost:7181";
+        options.Authority = configuration.GetConnectionString("IdentityServerLocalHost");
         options.RequireHttpsMetadata = false;
         options.Audience = "SwaggerAPI";
         options.TokenValidationParameters = new TokenValidationParameters
