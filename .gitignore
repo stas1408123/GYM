@@ -349,3 +349,8 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /GymApp/TestClientForGrpc
+gym-app/src/components/CreateProduct.tsx
+gym-app/src/components/Product.tsx
+gym-app/src/hooks/products.ts
+gym-app/src/pages/ProductsPage.tsx
+gym-app/src/Interfaces/IProduct.ts
