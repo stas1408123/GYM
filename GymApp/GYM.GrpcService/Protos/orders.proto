@@ -72,8 +72,7 @@ service OrdersService
  }
 
  // Response messages
-
- message ListOrdersReply 
+  message ListOrdersReply 
  {
 	 repeated OrderReply Orders = 1;
  }
